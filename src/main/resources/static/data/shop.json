@@ -1,0 +1,102 @@
+[
+  {
+    "id": "pen-sun",
+    "name": "Bút Ngân Hà Finchi",
+    "category": "Bút",
+    "price": 29000,
+    "image": "/images/rewards/pen-sun.svg",
+    "favoriteCharacterTag": "Finchi Sao",
+    "description": "Bút gel có sticker ngôi sao và bảng mục tiêu mini để bé thấy việc học cũng là một cuộc phiêu lưu.",
+    "collection": "Bộ sưu tập Phi thuyền"
+  },
+  {
+    "id": "notebook-cloud",
+    "name": "Vở Đảo Cầu Vồng",
+    "category": "Vở",
+    "price": 36000,
+    "image": "/images/rewards/notebook-cloud.svg",
+    "favoriteCharacterTag": "Finchi Mây",
+    "description": "Quyển vở bìa mềm có sticker cầu vồng và khoảng trống ghi mục tiêu tiết kiệm mỗi tuần.",
+    "collection": "Bộ sưu tập Hòn đảo mơ ước"
+  },
+  {
+    "id": "sticker-finchi",
+    "name": "Sticker Phi Hành Gia Finchi",
+    "category": "Sticker",
+    "price": 22000,
+    "image": "/images/rewards/sticker-finchi.svg",
+    "favoriteCharacterTag": "Finchi Vui",
+    "description": "Sticker ngộ nghĩnh để dán lên vở, hộp bút hoặc bảng thành tích sau mỗi lần hoàn thành level.",
+    "collection": "Bộ sưu tập Nhiệm vụ vui"
+  },
+  {
+    "id": "pencilcase-star",
+    "name": "Hộp Bút Siêu Ngầu Vũ Trụ",
+    "category": "Hộp bút",
+    "price": 52000,
+    "image": "/images/rewards/pencilcase-star.svg",
+    "favoriteCharacterTag": "Finchi Phiêu Lưu",
+    "description": "Hộp bút rộng với phối màu nổi bật, kèm sticker nhỏ để bé thấy phần thưởng học tập thật đáng mong chờ.",
+    "collection": "Bộ sưu tập Kho báu sao băng"
+  },
+  {
+    "id": "ruler-rainbow",
+    "name": "Thước Kẻ Kẹo Mây",
+    "category": "Thước",
+    "price": 26000,
+    "image": "/images/rewards/ruler-rainbow.svg",
+    "favoriteCharacterTag": "Finchi Cầu Vồng",
+    "description": "Thước nhiều màu dịu mắt, phù hợp học toán và trang trí góc học tập vui nhộn.",
+    "collection": "Bộ sưu tập Vui học mỗi ngày"
+  },
+  {
+    "id": "label-finchi",
+    "name": "Nhãn Vở Siêu Nhiệm Vụ",
+    "category": "Nhãn vở",
+    "price": 24000,
+    "image": "/images/rewards/label-finchi.svg",
+    "favoriteCharacterTag": "Finchi Nhỏ Xinh",
+    "description": "Bộ nhãn dán môn học có icon ngôi sao, tên nhân vật và màu sắc tươi sáng.",
+    "collection": "Bộ sưu tập Gọn gàng siêu cấp"
+  },
+  {
+    "id": "eraser-comet",
+    "name": "Tẩy Sao Chổi",
+    "category": "Tẩy",
+    "price": 18000,
+    "image": "/images/rewards/eraser-comet.svg",
+    "favoriteCharacterTag": "Finchi Sao Băng",
+    "description": "Cục tẩy nhỏ xinh có đuôi sao chổi, làm bài sai cũng trở nên dễ thương hơn.",
+    "collection": "Bộ sưu tập Thiên hà học tập"
+  },
+  {
+    "id": "bookmark-forest",
+    "name": "Thẻ Đánh Dấu Rừng Xanh",
+    "category": "Bookmark",
+    "price": 21000,
+    "image": "/images/rewards/bookmark-forest.svg",
+    "favoriteCharacterTag": "Finchi Rừng Xanh",
+    "description": "Thẻ đánh dấu sách có thú bạn đồng hành, giúp bé nhớ mục tiêu đọc sách và tiết kiệm.",
+    "collection": "Bộ sưu tập Đảo tri thức"
+  },
+  {
+    "id": "crayon-pop",
+    "name": "Bút Sáp Sắc Màu Pop",
+    "category": "Màu vẽ",
+    "price": 34000,
+    "image": "/images/rewards/crayon-pop.svg",
+    "favoriteCharacterTag": "Finchi Cầu Vồng",
+    "description": "Bộ bút sáp rực rỡ để bé sáng tạo tranh mục tiêu tài chính thật vui nhộn.",
+    "collection": "Bộ sưu tập Sáng tạo mỗi ngày"
+  },
+  {
+    "id": "backpack-rocket",
+    "name": "Ba Lô Tên Lửa Mini",
+    "category": "Ba lô",
+    "price": 68000,
+    "image": "/images/rewards/backpack-rocket.svg",
+    "favoriteCharacterTag": "Finchi Phiêu Lưu",
+    "description": "Ba lô mini siêu ngầu để cất sách vở và nhắc bé rằng tiết kiệm bền bỉ sẽ chạm tới giấc mơ lớn.",
+    "collection": "Bộ sưu tập Chinh phục 10 đảo"
+  }
+]

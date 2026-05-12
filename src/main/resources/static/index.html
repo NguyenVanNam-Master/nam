@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>FINCHI EDU: Nền tảng học tài chính cá nhân qua trò chơi dành cho học sinh tiểu học</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@400;600;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="icon" type="image/png" href="/images/logo-finchi-game.png" />
+  <link rel="apple-touch-icon" href="/images/logo-finchi-game.png" />
+  <link rel="stylesheet" href="/css/styles.css" />
+</head>
+<body>
+  <div id="boot-splash" class="boot-splash" aria-hidden="true">
+    <div class="boot-sky-decor boot-sky-decor-left"></div>
+    <div class="boot-sky-decor boot-sky-decor-right"></div>
+    <div class="boot-cloud boot-cloud-1">☁️</div>
+    <div class="boot-cloud boot-cloud-2">☁️</div>
+    <div class="boot-cloud boot-cloud-3">☁️</div>
+    <div class="boot-floating boot-floating-coin boot-floating-1">🪙</div>
+    <div class="boot-floating boot-floating-coin boot-floating-2">🪙</div>
+    <div class="boot-floating boot-floating-star boot-floating-3">⭐</div>
+    <div class="boot-floating boot-floating-star boot-floating-4">✨</div>
+    <div class="boot-floating boot-floating-star boot-floating-5">💸</div>
+
+    <div class="boot-scene">
+      <div class="boot-card">
+        <div class="boot-logo-halo"></div>
+        <img src="/images/logo-finchi-game.png" alt="FINCHI EDU" class="boot-logo">
+        <div class="boot-coin-ring">
+          <span>🪙</span>
+          <span>🪙</span>
+          <span>🪙</span>
+        </div>
+        <div class="boot-sticker-row">
+          <span>🚀</span>
+          <span>🌈</span>
+          <span>✨</span>
+          <span>🎒</span>
+        </div>
+        <h1>FINCHI EDU</h1>
+        <p id="boot-status" class="boot-status">Đang mở cánh cửa tới Finchi...</p>
+        <div class="boot-progress-shell" aria-hidden="true">
+          <div id="boot-progress-fill" class="boot-progress-fill"></div>
+          <div class="boot-progress-coin">🪙</div>
+        </div>
+        <div id="boot-progress-label" class="boot-progress-label">0%</div>
+      </div>
+
+      <div class="boot-island-row" aria-hidden="true">
+        <div class="boot-island boot-island-1"><span>🌴</span></div>
+        <div class="boot-island boot-island-2"><span>🏝️</span></div>
+        <div class="boot-island boot-island-3"><span>🎯</span></div>
+      </div>
+    </div>
+  </div>
+
+  <div id="app" class="app-shell"></div>
+  <div id="toast" class="toast" aria-live="polite"></div>
+  <script src="/js/ai-agent.js"></script>
+  <script src="/js/app.js"></script>
+</body>
+</html>

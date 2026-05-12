@@ -1,0 +1,8 @@
+<svg width="240" height="180" viewBox="0 0 240 180" xmlns="http://www.w3.org/2000/svg">
+  <rect width="240" height="180" rx="28" fill="#FFF6E8"/>
+  <rect x="46" y="56" width="148" height="64" rx="24" fill="#F6C36D"/>
+  <rect x="56" y="66" width="128" height="44" rx="18" fill="#FFD870"/>
+  <rect x="94" y="48" width="52" height="10" rx="5" fill="#8B6A2D"/>
+  <path d="M120 72l6 12 14 2-10 10 2 14-12-6-12 6 2-14-10-10 14-2z" fill="#FFFFFF"/>
+  <text x="120" y="150" text-anchor="middle" font-family="Arial" font-size="18" font-weight="700" fill="#4E625D">Hộp Bút Sao Vàng</text>
+</svg>

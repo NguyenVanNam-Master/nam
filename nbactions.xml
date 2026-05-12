@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<actions xmlns="http://www.netbeans.org/ns/maven-actions/1">
+    <action>
+        <actionName>run</actionName>
+        <packagings>
+            <packaging>jar</packaging>
+        </packagings>
+        <goals>
+            <goal>process-classes</goal>
+            <goal>org.codehaus.mojo:exec-maven-plugin:3.5.1:exec</goal>
+        </goals>
+        <properties>
+            <exec.mainClass>com.finchi.FinchiApplication</exec.mainClass>
+            <exec.appArgs></exec.appArgs>
+            <exec.vmArgs>-Dfile.encoding=UTF-8</exec.vmArgs>
+            <exec.args>${exec.vmArgs} -classpath %classpath ${exec.mainClass} ${exec.appArgs}</exec.args>
+        </properties>
+    </action>
+    <action>
+        <actionName>debug</actionName>
+        <packagings>
+            <packaging>jar</packaging>
+        </packagings>
+        <goals>
+            <goal>process-classes</goal>
+            <goal>org.codehaus.mojo:exec-maven-plugin:3.5.1:exec</goal>
+        </goals>
+        <properties>
+            <exec.mainClass>com.finchi.FinchiApplication</exec.mainClass>
+            <exec.appArgs></exec.appArgs>
+            <exec.vmArgs>-agentlib:jdwp=transport=dt_socket,server=n,address=${jpda.address} -Dfile.encoding=UTF-8</exec.vmArgs>
+            <exec.args>${exec.vmArgs} -classpath %classpath ${exec.mainClass} ${exec.appArgs}</exec.args>
+            <jpda.listen>true</jpda.listen>
+        </properties>
+    </action>
+    <action>
+        <actionName>run.single.main</actionName>
+        <packagings>
+            <packaging>jar</packaging>
+        </packagings>
+        <goals>
+            <goal>process-classes</goal>
+            <goal>org.codehaus.mojo:exec-maven-plugin:3.5.1:exec</goal>
+        </goals>
+        <properties>
+            <exec.mainClass>com.finchi.FinchiApplication</exec.mainClass>
+            <exec.appArgs></exec.appArgs>
+            <exec.vmArgs>-Dfile.encoding=UTF-8</exec.vmArgs>
+            <exec.args>${exec.vmArgs} -classpath %classpath ${exec.mainClass} ${exec.appArgs}</exec.args>
+        </properties>
+    </action>
+    <action>
+        <actionName>debug.single.main</actionName>
+        <packagings>
+            <packaging>jar</packaging>
+        </packagings>
+        <goals>
+            <goal>process-classes</goal>
+            <goal>org.codehaus.mojo:exec-maven-plugin:3.5.1:exec</goal>
+        </goals>
+        <properties>
+            <exec.mainClass>com.finchi.FinchiApplication</exec.mainClass>
+            <exec.appArgs></exec.appArgs>
+            <exec.vmArgs>-agentlib:jdwp=transport=dt_socket,server=n,address=${jpda.address} -Dfile.encoding=UTF-8</exec.vmArgs>
+            <exec.args>${exec.vmArgs} -classpath %classpath ${exec.mainClass} ${exec.appArgs}</exec.args>
+            <jpda.listen>true</jpda.listen>
+        </properties>
+    </action>
+</actions>

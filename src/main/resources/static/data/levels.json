@@ -1,0 +1,1577 @@
+[
+  {
+    "id": 1,
+    "title": "Tiền đến từ đâu?",
+    "description": "Hiểu tiền là phần thưởng cho công sức và giá trị.",
+    "lessonVideoUrl": "/videos/levels/level-1.mp4",
+    "rewardAmount": 2750,
+    "questions": [
+      {
+        "id": "l1-q1",
+        "type": "multiple_choice",
+        "prompt": "Tiền có tự nhiên xuất hiện không?",
+        "options": [
+          "Có",
+          "Không"
+        ],
+        "correctAnswer": 1,
+        "reward": 500,
+        "knowledgeReward": "Tiền không tự nhiên xuất hiện."
+      },
+      {
+        "id": "l1-q2",
+        "type": "multiple_choice",
+        "prompt": "Điều nào giúp tạo ra tiền?",
+        "options": [
+          "Công sức và thời gian",
+          "Ngồi chờ",
+          "Đòi mua ngay"
+        ],
+        "correctAnswer": 0,
+        "reward": 500,
+        "knowledgeReward": "Tiền gắn với công sức và thời gian."
+      },
+      {
+        "id": "l1-q3",
+        "type": "multiple_choice",
+        "prompt": "Việc nào phù hợp giúp trẻ học giá trị của tiền?",
+        "options": [
+          "Giúp việc nhỏ phù hợp",
+          "Phá đồ rồi xin tiền mới",
+          "Đòi quà mỗi ngày"
+        ],
+        "correctAnswer": 0,
+        "reward": 500,
+        "knowledgeReward": "Làm điều có ích giúp mình hiểu giá trị của tiền."
+      },
+      {
+        "id": "l1-q4",
+        "type": "multiple_choice",
+        "prompt": "Tiền là phần thưởng cho điều gì?",
+        "options": [
+          "Sự cố gắng",
+          "Sự lười biếng",
+          "Sự nóng vội"
+        ],
+        "correctAnswer": 0,
+        "reward": 500,
+        "knowledgeReward": "Biết quý tiền là biết quý sự cố gắng."
+      },
+      {
+        "id": "l1-q5",
+        "type": "multiple_choice",
+        "prompt": "Khi hiểu tiền đến từ công sức, con sẽ…",
+        "options": [
+          "Biết quý tiền hơn",
+          "Tiêu tùy thích hơn",
+          "Không cần suy nghĩ khi mua"
+        ],
+        "correctAnswer": 0,
+        "reward": 500,
+        "knowledgeReward": "Người biết trân trọng tiền sẽ dùng tiền cẩn thận hơn."
+      },
+      {
+        "id": "l1-q6",
+        "type": "multiple_choice",
+        "prompt": "Điều nào KHÔNG giúp tạo ra giá trị?",
+        "options": [
+          "Giúp đỡ việc phù hợp",
+          "Ngồi chờ tiền xuất hiện",
+          "Giữ gìn đồ dùng"
+        ],
+        "correctAnswer": 1,
+        "reward": 500,
+        "knowledgeReward": "Muốn có tiền, mình cần chủ động tạo ra giá trị."
+      },
+      {
+        "id": "l1-q7",
+        "type": "multiple_choice",
+        "prompt": "Khi làm việc tốt và nhận thưởng, con nên hiểu điều gì?",
+        "options": [
+          "Tiền gắn với sự cố gắng",
+          "Tiền tự đến mỗi ngày",
+          "Tiền không cần trân trọng"
+        ],
+        "correctAnswer": 0,
+        "reward": 500,
+        "knowledgeReward": "Tiền thưởng giúp mình hiểu giá trị của công sức."
+      },
+      {
+        "id": "l1-q8",
+        "type": "multiple_choice",
+        "prompt": "Bạn nhỏ bán sách cũ còn tốt để làm gì?",
+        "options": [
+          "Để tạo thêm giá trị",
+          "Để làm mất sách",
+          "Để không phải học nữa"
+        ],
+        "correctAnswer": 0,
+        "reward": 500,
+        "knowledgeReward": "Đồ dùng cũ vẫn có thể tạo ra giá trị mới."
+      },
+      {
+        "id": "l1-q9",
+        "type": "multiple_choice",
+        "prompt": "Thời gian và công sức giống như gì đối với tiền?",
+        "options": [
+          "Nguồn gốc của tiền",
+          "Một trò may rủi",
+          "Điều không liên quan"
+        ],
+        "correctAnswer": 0,
+        "reward": 500,
+        "knowledgeReward": "Công sức và thời gian là nguồn gốc của tiền."
+      },
+      {
+        "id": "l1-q10",
+        "type": "multiple_choice",
+        "prompt": "Khi biết quý tiền, con sẽ…",
+        "options": [
+          "Dùng cẩn thận hơn",
+          "Tiêu hết thật nhanh",
+          "Không cần suy nghĩ"
+        ],
+        "correctAnswer": 0,
+        "reward": 500,
+        "knowledgeReward": "Biết quý tiền giúp mình chi tiêu cẩn thận hơn."
+      }
+    ],
+    "knowledgeCards": [
+      "Tiền không tự nhiên xuất hiện.",
+      "Tiền gắn với công sức và thời gian.",
+      "Làm điều có ích giúp mình hiểu giá trị của tiền.",
+      "Biết quý tiền là biết quý sự cố gắng.",
+      "Người biết trân trọng tiền sẽ dùng tiền cẩn thận hơn.",
+      "Muốn có tiền, mình cần chủ động tạo ra giá trị.",
+      "Tiền thưởng giúp mình hiểu giá trị của công sức.",
+      "Đồ dùng cũ vẫn có thể tạo ra giá trị mới.",
+      "Công sức và thời gian là nguồn gốc của tiền.",
+      "Biết quý tiền giúp mình chi tiêu cẩn thận hơn."
+    ],
+    "subtitleUrl": null,
+    "unlockRequirement": 9
+  },
+  {
+    "id": 2,
+    "title": "Làm quen với tiền Việt Nam",
+    "description": "Nhận diện các mệnh giá tiền Việt Nam phổ biến.",
+    "lessonVideoUrl": "/videos/levels/level-2.mp4",
+    "rewardAmount": 3000,
+    "questions": [
+      {
+        "id": "l2-q1",
+        "type": "multiple_choice",
+        "prompt": "Tờ 20.000 đồng có giá trị như thế nào so với tờ 5.000 đồng?",
+        "options": [
+          "Nhỏ hơn",
+          "Lớn hơn",
+          "Bằng nhau"
+        ],
+        "correctAnswer": 1,
+        "reward": 500,
+        "knowledgeReward": "Tiền Việt Nam có nhiều mệnh giá khác nhau."
+      },
+      {
+        "id": "l2-q2",
+        "type": "multiple_choice",
+        "prompt": "Mỗi tờ tiền Việt Nam có gì khác nhau?",
+        "options": [
+          "Màu sắc và con số",
+          "Đều giống hệt nhau",
+          "Chỉ khác kích thước"
+        ],
+        "correctAnswer": 0,
+        "reward": 500,
+        "knowledgeReward": "Con số trên tờ tiền cho biết giá trị của nó."
+      },
+      {
+        "id": "l2-q3",
+        "type": "multiple_choice",
+        "prompt": "Khi mua món đồ, con cần biết điều gì?",
+        "options": [
+          "Số tiền của món đồ",
+          "Màu mình thích",
+          "Tên cửa hàng trước"
+        ],
+        "correctAnswer": 0,
+        "reward": 500,
+        "knowledgeReward": "Số lớn hơn thường có giá trị lớn hơn."
+      },
+      {
+        "id": "l2-q4",
+        "type": "multiple_choice",
+        "prompt": "Tờ tiền nào lớn hơn?",
+        "options": [
+          "10.000đ",
+          "2.000đ"
+        ],
+        "correctAnswer": 0,
+        "reward": 500,
+        "knowledgeReward": "Biết nhận diện tiền giúp con mua đồ dễ hơn."
+      },
+      {
+        "id": "l2-q5",
+        "type": "drag_classify",
+        "prompt": "Kéo thả các tờ tiền vào đúng nhóm mệnh giá.",
+        "instructions": "Nhóm Nhỏ: 1.000đ, 2.000đ và 5.000đ · Nhóm Trung bình: 10.000đ, 20.000đ và 50.000đ · Nhóm Lớn: 100.000đ và 200.000đ · Nhóm Rất lớn: 500.000đ.",
+        "reward": 700,
+        "knowledgeReward": "Đọc đúng mệnh giá là bước đầu để quản lý tiền.",
+        "dragItems": [
+          {
+            "id": "money-1k",
+            "label": "1.000đ",
+            "target": "Nhỏ",
+            "image": "/images/money/1k.png"
+          },
+          {
+            "id": "money-2k",
+            "label": "2.000đ",
+            "target": "Nhỏ",
+            "image": "/images/money/2k.png"
+          },
+          {
+            "id": "money-5k",
+            "label": "5.000đ",
+            "target": "Nhỏ",
+            "image": "/images/money/5k.png"
+          },
+          {
+            "id": "money-10k",
+            "label": "10.000đ",
+            "target": "Trung bình",
+            "image": "/images/money/10k.png"
+          },
+          {
+            "id": "money-20k",
+            "label": "20.000đ",
+            "target": "Trung bình",
+            "image": "/images/money/20k.png"
+          },
+          {
+            "id": "money-50k",
+            "label": "50.000đ",
+            "target": "Trung bình",
+            "image": "/images/money/50k.png"
+          },
+          {
+            "id": "money-100k",
+            "label": "100.000đ",
+            "target": "Lớn",
+            "image": "/images/money/100k.png"
+          },
+          {
+            "id": "money-200k",
+            "label": "200.000đ",
+            "target": "Lớn",
+            "image": "/images/money/200k.png"
+          },
+          {
+            "id": "money-500k",
+            "label": "500.000đ",
+            "target": "Rất lớn",
+            "image": "/images/money/500k.png"
+          }
+        ],
+        "dropZones": [
+          "Nhỏ",
+          "Trung bình",
+          "Lớn",
+          "Rất lớn"
+        ]
+      },
+      {
+        "id": "l2-q6",
+        "type": "multiple_choice",
+        "prompt": "Tờ 50.000đ thuộc nhóm nào?",
+        "options": [
+          "Nhóm nhỏ",
+          "Nhóm trung bình",
+          "Nhóm rất lớn"
+        ],
+        "correctAnswer": 1,
+        "reward": 500,
+        "knowledgeReward": "50.000đ là mệnh giá trung bình khá lớn trong các tờ tiền quen thuộc."
+      },
+      {
+        "id": "l2-q7",
+        "type": "multiple_choice",
+        "prompt": "Tờ 100.000đ có giá trị như thế nào so với 20.000đ?",
+        "options": [
+          "Nhỏ hơn",
+          "Lớn hơn",
+          "Bằng nhau"
+        ],
+        "correctAnswer": 1,
+        "reward": 500,
+        "knowledgeReward": "100.000đ lớn hơn 20.000đ."
+      },
+      {
+        "id": "l2-q8",
+        "type": "multiple_choice",
+        "prompt": "Con nên nhìn kỹ điều gì trên tờ tiền?",
+        "options": [
+          "Con số mệnh giá",
+          "Màu áo người cầm tiền",
+          "Tên cửa hàng"
+        ],
+        "correctAnswer": 0,
+        "reward": 500,
+        "knowledgeReward": "Con số mệnh giá giúp nhận ra giá trị của tờ tiền."
+      },
+      {
+        "id": "l2-q9",
+        "type": "multiple_choice",
+        "prompt": "Nếu món đồ giá 12.000đ, tờ tiền nào gần đủ hơn?",
+        "options": [
+          "10.000đ",
+          "2.000đ",
+          "1.000đ"
+        ],
+        "correctAnswer": 0,
+        "reward": 500,
+        "knowledgeReward": "Chọn mệnh giá phù hợp giúp thanh toán dễ hơn."
+      },
+      {
+        "id": "l2-q10",
+        "type": "multiple_choice",
+        "prompt": "Vì sao cần học mệnh giá tiền?",
+        "options": [
+          "Để chọn tiền đúng khi mua đồ",
+          "Để nhớ màu sắc thôi",
+          "Để không cần nhìn giá"
+        ],
+        "correctAnswer": 0,
+        "reward": 500,
+        "knowledgeReward": "Biết mệnh giá tiền giúp con trả tiền đúng hơn."
+      }
+    ],
+    "knowledgeCards": [
+      "Tiền Việt Nam có nhiều mệnh giá khác nhau.",
+      "Con số trên tờ tiền cho biết giá trị của nó.",
+      "Số lớn hơn thường có giá trị lớn hơn.",
+      "Biết nhận diện tiền giúp con mua đồ dễ hơn.",
+      "Đọc đúng mệnh giá là bước đầu để quản lý tiền.",
+      "50.000đ là mệnh giá trung bình khá lớn trong các tờ tiền quen thuộc.",
+      "100.000đ lớn hơn 20.000đ.",
+      "Con số mệnh giá giúp nhận ra giá trị của tờ tiền.",
+      "Chọn mệnh giá phù hợp giúp thanh toán dễ hơn.",
+      "Biết mệnh giá tiền giúp con trả tiền đúng hơn."
+    ],
+    "subtitleUrl": null,
+    "unlockRequirement": 9
+  },
+  {
+    "id": 3,
+    "title": "Cần và Muốn",
+    "description": "Phân biệt điều cần thiết và điều chỉ muốn có thêm.",
+    "lessonVideoUrl": "/videos/levels/level-3.mp4",
+    "rewardAmount": 3250,
+    "questions": [
+      {
+        "id": "l3-q1",
+        "type": "multiple_choice",
+        "prompt": "Bút và vở thường thuộc nhóm nào?",
+        "options": [
+          "Cần",
+          "Muốn"
+        ],
+        "correctAnswer": 0,
+        "reward": 500,
+        "knowledgeReward": "Cần là thứ quan trọng cho cuộc sống và học tập."
+      },
+      {
+        "id": "l3-q2",
+        "type": "multiple_choice",
+        "prompt": "Đồ chơi mới thường thuộc nhóm nào?",
+        "options": [
+          "Cần",
+          "Muốn"
+        ],
+        "correctAnswer": 1,
+        "reward": 500,
+        "knowledgeReward": "Muốn là thứ làm mình vui thêm nhưng không bắt buộc."
+      },
+      {
+        "id": "l3-q3",
+        "type": "multiple_choice",
+        "prompt": "Trước khi mua món mình thích, con nên làm gì?",
+        "options": [
+          "Dừng lại suy nghĩ",
+          "Mua ngay lập tức",
+          "Đòi bằng được"
+        ],
+        "correctAnswer": 0,
+        "reward": 500,
+        "knowledgeReward": "Dừng lại suy nghĩ giúp mình bớt mua bốc đồng."
+      },
+      {
+        "id": "l3-q4",
+        "type": "multiple_choice",
+        "prompt": "Thứ “cần” là thứ…",
+        "options": [
+          "Quan trọng cho cuộc sống và học tập",
+          "Chỉ để vui thêm",
+          "Không có cũng được"
+        ],
+        "correctAnswer": 0,
+        "reward": 500,
+        "knowledgeReward": "Ưu tiên điều cần trước sẽ giúp dùng tiền tốt hơn."
+      },
+      {
+        "id": "l3-q5",
+        "type": "multiple_choice",
+        "prompt": "Ưu tiên điều cần trước điều muốn sẽ giúp con…",
+        "options": [
+          "Tiêu tiền tốt hơn",
+          "Hết tiền nhanh hơn",
+          "Không cần lập kế hoạch"
+        ],
+        "correctAnswer": 0,
+        "reward": 500,
+        "knowledgeReward": "Biết chọn là một kỹ năng tài chính quan trọng."
+      },
+      {
+        "id": "l3-q6",
+        "type": "multiple_choice",
+        "prompt": "Một hộp bút để đi học thường là…",
+        "options": [
+          "Cần",
+          "Muốn"
+        ],
+        "correctAnswer": 0,
+        "reward": 500,
+        "knowledgeReward": "Dụng cụ học tập thường thuộc nhóm cần."
+      },
+      {
+        "id": "l3-q7",
+        "type": "multiple_choice",
+        "prompt": "Một món đồ chơi mới tinh thường là…",
+        "options": [
+          "Cần",
+          "Muốn"
+        ],
+        "correctAnswer": 1,
+        "reward": 500,
+        "knowledgeReward": "Đồ chơi mới thường thuộc nhóm muốn."
+      },
+      {
+        "id": "l3-q8",
+        "type": "multiple_choice",
+        "prompt": "Khi chưa chắc món đồ là cần hay muốn, con nên…",
+        "options": [
+          "Tự hỏi lại và suy nghĩ",
+          "Mua ngay",
+          "Đòi người lớn mua ngay"
+        ],
+        "correctAnswer": 0,
+        "reward": 500,
+        "knowledgeReward": "Dừng lại suy nghĩ giúp con quyết định thông minh hơn."
+      },
+      {
+        "id": "l3-q9",
+        "type": "multiple_choice",
+        "prompt": "Điều nào dưới đây là nhu cầu cơ bản?",
+        "options": [
+          "Thức ăn và đồ học tập",
+          "Nhiều đồ trang trí",
+          "Đồ chơi đắt tiền"
+        ],
+        "correctAnswer": 0,
+        "reward": 500,
+        "knowledgeReward": "Nhu cầu cơ bản là những thứ quan trọng cho cuộc sống và học tập."
+      },
+      {
+        "id": "l3-q10",
+        "type": "multiple_choice",
+        "prompt": "Biết phân biệt cần và muốn giúp con…",
+        "options": [
+          "Giảm mua bốc đồng",
+          "Mua nhanh hơn",
+          "Không cần lập kế hoạch"
+        ],
+        "correctAnswer": 0,
+        "reward": 500,
+        "knowledgeReward": "Phân biệt cần và muốn giúp giảm mua sắm bốc đồng."
+      }
+    ],
+    "knowledgeCards": [
+      "Cần là thứ quan trọng cho cuộc sống và học tập.",
+      "Muốn là thứ làm mình vui thêm nhưng không bắt buộc.",
+      "Dừng lại suy nghĩ giúp mình bớt mua bốc đồng.",
+      "Ưu tiên điều cần trước sẽ giúp dùng tiền tốt hơn.",
+      "Biết chọn là một kỹ năng tài chính quan trọng.",
+      "Dụng cụ học tập thường thuộc nhóm cần.",
+      "Đồ chơi mới thường thuộc nhóm muốn.",
+      "Dừng lại suy nghĩ giúp con quyết định thông minh hơn.",
+      "Nhu cầu cơ bản là những thứ quan trọng cho cuộc sống và học tập.",
+      "Phân biệt cần và muốn giúp giảm mua sắm bốc đồng."
+    ],
+    "subtitleUrl": null,
+    "unlockRequirement": 9
+  },
+  {
+    "id": 4,
+    "title": "Chi tiêu và Tiết kiệm",
+    "description": "Hiểu sự khác nhau giữa dùng tiền bây giờ và để dành.",
+    "lessonVideoUrl": "/videos/levels/level-4.mp4",
+    "rewardAmount": 3500,
+    "questions": [
+      {
+        "id": "l4-q1",
+        "type": "multiple_choice",
+        "prompt": "Chi tiêu là gì?",
+        "options": [
+          "Dùng tiền bây giờ",
+          "Cất tiền mãi mãi",
+          "Không dùng tiền nữa"
+        ],
+        "correctAnswer": 0,
+        "reward": 500,
+        "knowledgeReward": "Chi tiêu là dùng tiền cho hiện tại."
+      },
+      {
+        "id": "l4-q2",
+        "type": "multiple_choice",
+        "prompt": "Tiết kiệm là gì?",
+        "options": [
+          "Dùng hết tiền ngay",
+          "Để dành cho sau này",
+          "Cho hết tiền đi"
+        ],
+        "correctAnswer": 1,
+        "reward": 500,
+        "knowledgeReward": "Tiết kiệm là giữ lại tiền cho tương lai."
+      },
+      {
+        "id": "l4-q3",
+        "type": "multiple_choice",
+        "prompt": "Khi có tiền, con nên…",
+        "options": [
+          "Có thể chia thành phần tiêu và phần để dành",
+          "Tiêu hết ngay",
+          "Giấu đi và không dùng"
+        ],
+        "correctAnswer": 0,
+        "reward": 500,
+        "knowledgeReward": "Không cần tiêu hết tiền ngay khi mới có."
+      },
+      {
+        "id": "l4-q4",
+        "type": "multiple_choice",
+        "prompt": "Điều nào đúng?",
+        "options": [
+          "Chỉ tiết kiệm mới tốt",
+          "Chỉ chi tiêu mới tốt",
+          "Cả chi tiêu đúng và tiết kiệm đúng đều quan trọng"
+        ],
+        "correctAnswer": 2,
+        "reward": 500,
+        "knowledgeReward": "Biết chia tiền giúp mình chủ động hơn."
+      },
+      {
+        "id": "l4-q5",
+        "type": "multiple_choice",
+        "prompt": "Biết tiết kiệm giúp con…",
+        "options": [
+          "Có tiền cho mục tiêu sau này",
+          "Mua tất cả ngay hôm nay",
+          "Không cần nghĩ đến tương lai"
+        ],
+        "correctAnswer": 0,
+        "reward": 500,
+        "knowledgeReward": "Chi tiêu đúng và tiết kiệm đúng đều quan trọng."
+      },
+      {
+        "id": "l4-q6",
+        "type": "multiple_choice",
+        "prompt": "Nếu con tiêu hết tiền ngay, điều gì có thể xảy ra?",
+        "options": [
+          "Không còn tiền cho mục tiêu sau",
+          "Con tiết kiệm tốt hơn",
+          "Con có nhiều tiền hơn"
+        ],
+        "correctAnswer": 0,
+        "reward": 500,
+        "knowledgeReward": "Tiêu hết ngay khiến mình khó đạt mục tiêu sau này."
+      },
+      {
+        "id": "l4-q7",
+        "type": "multiple_choice",
+        "prompt": "Bỏ tiền vào heo đất là ví dụ của…",
+        "options": [
+          "Chi tiêu",
+          "Tiết kiệm",
+          "Lãng phí"
+        ],
+        "correctAnswer": 1,
+        "reward": 500,
+        "knowledgeReward": "Bỏ tiền vào heo đất là tiết kiệm."
+      },
+      {
+        "id": "l4-q8",
+        "type": "multiple_choice",
+        "prompt": "Cách dùng tiền thông minh là…",
+        "options": [
+          "Chia một phần tiêu, một phần để dành",
+          "Tiêu hết ngay",
+          "Cất mãi không dùng"
+        ],
+        "correctAnswer": 0,
+        "reward": 500,
+        "knowledgeReward": "Biết chia tiền giúp mình chủ động hơn."
+      },
+      {
+        "id": "l4-q9",
+        "type": "multiple_choice",
+        "prompt": "Tiết kiệm giúp con làm gì?",
+        "options": [
+          "Chuẩn bị cho mục tiêu tương lai",
+          "Mua mọi thứ ngay",
+          "Không cần nghĩ đến ngày mai"
+        ],
+        "correctAnswer": 0,
+        "reward": 500,
+        "knowledgeReward": "Tiết kiệm giúp chuẩn bị cho tương lai."
+      },
+      {
+        "id": "l4-q10",
+        "type": "multiple_choice",
+        "prompt": "Điều nào đúng nhất?",
+        "options": [
+          "Chi tiêu đúng và tiết kiệm đúng đều quan trọng",
+          "Chỉ chi tiêu mới quan trọng",
+          "Chỉ tiết kiệm mới quan trọng"
+        ],
+        "correctAnswer": 0,
+        "reward": 500,
+        "knowledgeReward": "Chi tiêu và tiết kiệm đều cần được cân bằng."
+      }
+    ],
+    "knowledgeCards": [
+      "Chi tiêu là dùng tiền cho hiện tại.",
+      "Tiết kiệm là giữ lại tiền cho tương lai.",
+      "Không cần tiêu hết tiền ngay khi mới có.",
+      "Biết chia tiền giúp mình chủ động hơn.",
+      "Chi tiêu đúng và tiết kiệm đúng đều quan trọng.",
+      "Tiêu hết ngay khiến mình khó đạt mục tiêu sau này.",
+      "Bỏ tiền vào heo đất là tiết kiệm.",
+      "Biết chia tiền giúp mình chủ động hơn.",
+      "Tiết kiệm giúp chuẩn bị cho tương lai.",
+      "Chi tiêu và tiết kiệm đều cần được cân bằng."
+    ],
+    "subtitleUrl": null,
+    "unlockRequirement": 9
+  },
+  {
+    "id": 5,
+    "title": "Chia tiền vào các hũ",
+    "description": "Biết chia tiền theo mục đích để dễ quản lý.",
+    "lessonVideoUrl": "/videos/levels/level-5.mp4",
+    "rewardAmount": 3750,
+    "questions": [
+      {
+        "id": "l5-q1",
+        "type": "multiple_choice",
+        "prompt": "Vì sao nên chia tiền vào các hũ?",
+        "options": [
+          "Để dễ quản lý hơn",
+          "Để rối hơn",
+          "Để quên mất tiền ở đâu"
+        ],
+        "correctAnswer": 0,
+        "reward": 500,
+        "knowledgeReward": "Chia tiền giúp quản lý tiền rõ ràng hơn."
+      },
+      {
+        "id": "l5-q2",
+        "type": "multiple_choice",
+        "prompt": "Hũ tiết kiệm dùng để làm gì?",
+        "options": [
+          "Để dành cho sau này",
+          "Mua mọi thứ ngay",
+          "Không cần dùng tới"
+        ],
+        "correctAnswer": 0,
+        "reward": 500,
+        "knowledgeReward": "Mỗi hũ có một mục đích riêng."
+      },
+      {
+        "id": "l5-q3",
+        "type": "multiple_choice",
+        "prompt": "Hũ tiêu dùng phù hợp để…",
+        "options": [
+          "Mua thứ cần thiết",
+          "Cất mãi không động tới",
+          "Đựng đồ chơi"
+        ],
+        "correctAnswer": 0,
+        "reward": 500,
+        "knowledgeReward": "Hũ tiêu dùng dành cho nhu cầu hiện tại."
+      },
+      {
+        "id": "l5-q4",
+        "type": "multiple_choice",
+        "prompt": "Hũ mục tiêu hoặc chia sẻ có thể dùng để…",
+        "options": [
+          "Chuẩn bị cho món muốn đạt hoặc giúp đỡ người khác",
+          "Tiêu bừa",
+          "Không có tác dụng gì"
+        ],
+        "correctAnswer": 0,
+        "reward": 500,
+        "knowledgeReward": "Hũ tiết kiệm dành cho tương lai."
+      },
+      {
+        "id": "l5-q5",
+        "type": "multiple_choice",
+        "prompt": "Khi tiền được chia rõ ràng, con sẽ…",
+        "options": [
+          "Dễ biết mình còn bao nhiêu",
+          "Khó kiểm soát hơn",
+          "Tiêu hết nhanh hơn"
+        ],
+        "correctAnswer": 0,
+        "reward": 500,
+        "knowledgeReward": "Hũ mục tiêu hoặc chia sẻ giúp con dùng tiền có ý nghĩa hơn."
+      },
+      {
+        "id": "l5-q6",
+        "type": "multiple_choice",
+        "prompt": "Hũ nào phù hợp cho món đồ muốn đạt được?",
+        "options": [
+          "Hũ mục tiêu",
+          "Hũ tiêu dùng",
+          "Hũ trống"
+        ],
+        "correctAnswer": 0,
+        "reward": 500,
+        "knowledgeReward": "Hũ mục tiêu giúp con tiến gần hơn đến món đồ mình mong muốn."
+      },
+      {
+        "id": "l5-q7",
+        "type": "multiple_choice",
+        "prompt": "Hũ chia sẻ dùng để…",
+        "options": [
+          "Giúp đỡ người khác khi phù hợp",
+          "Tiêu hết thật nhanh",
+          "Giấu tiền đi"
+        ],
+        "correctAnswer": 0,
+        "reward": 500,
+        "knowledgeReward": "Hũ chia sẻ giúp đồng tiền trở nên ý nghĩa hơn."
+      },
+      {
+        "id": "l5-q8",
+        "type": "multiple_choice",
+        "prompt": "Chia tiền vào hũ giúp con…",
+        "options": [
+          "Biết rõ tiền dùng vào việc gì",
+          "Quên tiền ở đâu",
+          "Khó quản lý hơn"
+        ],
+        "correctAnswer": 0,
+        "reward": 500,
+        "knowledgeReward": "Chia tiền theo hũ giúp việc quản lý dễ hơn."
+      },
+      {
+        "id": "l5-q9",
+        "type": "multiple_choice",
+        "prompt": "Nếu con có 30.000đ, con nên…",
+        "options": [
+          "Chia theo mục đích",
+          "Tiêu hết ngay",
+          "Bỏ quên"
+        ],
+        "correctAnswer": 0,
+        "reward": 500,
+        "knowledgeReward": "Tiền nên được chia theo mục đích rõ ràng."
+      },
+      {
+        "id": "l5-q10",
+        "type": "multiple_choice",
+        "prompt": "Điều nào đúng về các hũ tiền?",
+        "options": [
+          "Mỗi hũ có nhiệm vụ riêng",
+          "Hũ nào cũng giống nhau",
+          "Không cần chia hũ"
+        ],
+        "correctAnswer": 0,
+        "reward": 500,
+        "knowledgeReward": "Mỗi hũ tiền có một nhiệm vụ riêng."
+      }
+    ],
+    "knowledgeCards": [
+      "Chia tiền giúp quản lý tiền rõ ràng hơn.",
+      "Mỗi hũ có một mục đích riêng.",
+      "Hũ tiêu dùng dành cho nhu cầu hiện tại.",
+      "Hũ tiết kiệm dành cho tương lai.",
+      "Hũ mục tiêu hoặc chia sẻ giúp con dùng tiền có ý nghĩa hơn.",
+      "Hũ mục tiêu giúp con tiến gần hơn đến món đồ mình mong muốn.",
+      "Hũ chia sẻ giúp đồng tiền trở nên ý nghĩa hơn.",
+      "Chia tiền theo hũ giúp việc quản lý dễ hơn.",
+      "Tiền nên được chia theo mục đích rõ ràng.",
+      "Mỗi hũ tiền có một nhiệm vụ riêng."
+    ],
+    "subtitleUrl": null,
+    "unlockRequirement": 9
+  },
+  {
+    "id": 6,
+    "title": "An toàn khi dùng tiền trên mạng",
+    "description": "Hiểu tiền online cũng là tiền thật và cần bảo vệ.",
+    "lessonVideoUrl": "/videos/levels/level-6.mp4",
+    "rewardAmount": 4000,
+    "questions": [
+      {
+        "id": "l6-q1",
+        "type": "multiple_choice",
+        "prompt": "Tiền trong ví điện tử có phải là tiền thật không?",
+        "options": [
+          "Có",
+          "Không"
+        ],
+        "correctAnswer": 0,
+        "reward": 500,
+        "knowledgeReward": "Tiền online cũng là tiền thật."
+      },
+      {
+        "id": "l6-q2",
+        "type": "multiple_choice",
+        "prompt": "Có người xin mật khẩu, con nên…",
+        "options": [
+          "Cho ngay",
+          "Không chia sẻ",
+          "Chia sẻ một nửa"
+        ],
+        "correctAnswer": 1,
+        "reward": 500,
+        "knowledgeReward": "Không chia sẻ mật khẩu cho bất kỳ ai."
+      },
+      {
+        "id": "l6-q3",
+        "type": "multiple_choice",
+        "prompt": "Mã OTP có nên đưa cho người lạ không?",
+        "options": [
+          "Có",
+          "Không"
+        ],
+        "correctAnswer": 1,
+        "reward": 500,
+        "knowledgeReward": "Không đưa mã OTP cho người lạ."
+      },
+      {
+        "id": "l6-q4",
+        "type": "multiple_choice",
+        "prompt": "Khi gặp link lạ, con nên…",
+        "options": [
+          "Bấm ngay",
+          "Không bấm nếu chưa hỏi người lớn",
+          "Gửi cho nhiều người khác"
+        ],
+        "correctAnswer": 1,
+        "reward": 500,
+        "knowledgeReward": "Không bấm link lạ nếu chưa hỏi người lớn."
+      },
+      {
+        "id": "l6-q5",
+        "type": "multiple_choice",
+        "prompt": "Cẩn thận khi dùng tiền online là…",
+        "options": [
+          "Một kỹ năng thông minh",
+          "Việc không cần thiết",
+          "Chỉ dành cho người lớn"
+        ],
+        "correctAnswer": 0,
+        "reward": 500,
+        "knowledgeReward": "Biết bảo vệ tiền là biết bảo vệ chính mình."
+      },
+      {
+        "id": "l6-q6",
+        "type": "multiple_choice",
+        "prompt": "Người lạ hứa tặng quà để xin mã OTP, con nên…",
+        "options": [
+          "Không đưa và hỏi người lớn",
+          "Đưa ngay",
+          "Gửi cho bạn khác"
+        ],
+        "correctAnswer": 0,
+        "reward": 500,
+        "knowledgeReward": "Gặp yêu cầu xin OTP, hãy dừng lại và hỏi người lớn."
+      },
+      {
+        "id": "l6-q7",
+        "type": "multiple_choice",
+        "prompt": "Mật khẩu tài khoản nên được…",
+        "options": [
+          "Giữ bí mật",
+          "Chia sẻ cho người lạ",
+          "Dán công khai"
+        ],
+        "correctAnswer": 0,
+        "reward": 500,
+        "knowledgeReward": "Mật khẩu là thông tin cần được giữ kín."
+      },
+      {
+        "id": "l6-q8",
+        "type": "multiple_choice",
+        "prompt": "Link lạ có thể gây ra điều gì?",
+        "options": [
+          "Mất an toàn cho tài khoản",
+          "Làm con học giỏi hơn",
+          "Không ảnh hưởng gì"
+        ],
+        "correctAnswer": 0,
+        "reward": 500,
+        "knowledgeReward": "Link lạ có thể làm mất an toàn cho tài khoản."
+      },
+      {
+        "id": "l6-q9",
+        "type": "multiple_choice",
+        "prompt": "Tiền online khác tiền mặt ở điểm nào?",
+        "options": [
+          "Cách cất giữ",
+          "Không phải tiền thật",
+          "Không cần bảo vệ"
+        ],
+        "correctAnswer": 0,
+        "reward": 500,
+        "knowledgeReward": "Dù ở dạng online hay tiền mặt, tiền vẫn cần được bảo vệ."
+      },
+      {
+        "id": "l6-q10",
+        "type": "multiple_choice",
+        "prompt": "Kỹ năng nào giúp con dùng tiền trên mạng an toàn?",
+        "options": [
+          "Cẩn thận và kiểm tra trước",
+          "Tin mọi tin nhắn",
+          "Bấm link ngay"
+        ],
+        "correctAnswer": 0,
+        "reward": 500,
+        "knowledgeReward": "Cẩn thận và kiểm tra trước giúp bảo vệ tiền trên mạng."
+      }
+    ],
+    "knowledgeCards": [
+      "Tiền online cũng là tiền thật.",
+      "Không chia sẻ mật khẩu cho bất kỳ ai.",
+      "Không đưa mã OTP cho người lạ.",
+      "Không bấm link lạ nếu chưa hỏi người lớn.",
+      "Biết bảo vệ tiền là biết bảo vệ chính mình.",
+      "Gặp yêu cầu xin OTP, hãy dừng lại và hỏi người lớn.",
+      "Mật khẩu là thông tin cần được giữ kín.",
+      "Link lạ có thể làm mất an toàn cho tài khoản.",
+      "Dù ở dạng online hay tiền mặt, tiền vẫn cần được bảo vệ.",
+      "Cẩn thận và kiểm tra trước giúp bảo vệ tiền trên mạng."
+    ],
+    "subtitleUrl": null,
+    "unlockRequirement": 9
+  },
+  {
+    "id": 7,
+    "title": "Tiết kiệm có mục tiêu",
+    "description": "Biết tiết kiệm tốt hơn khi có mục tiêu rõ ràng.",
+    "lessonVideoUrl": "/videos/levels/level-7.mp4",
+    "rewardAmount": 4250,
+    "questions": [
+      {
+        "id": "l7-q1",
+        "type": "multiple_choice",
+        "prompt": "Tiết kiệm sẽ hiệu quả hơn khi…",
+        "options": [
+          "Có mục tiêu rõ ràng",
+          "Không biết để làm gì",
+          "Thay đổi ý định liên tục"
+        ],
+        "correctAnswer": 0,
+        "reward": 500,
+        "knowledgeReward": "Mục tiêu rõ ràng giúp mình tiết kiệm tốt hơn."
+      },
+      {
+        "id": "l7-q2",
+        "type": "multiple_choice",
+        "prompt": "Nếu món đồ giá 40.000đ, con có thể…",
+        "options": [
+          "Để dành từng ít một",
+          "Bỏ cuộc ngay",
+          "Đòi mua ngay lập tức"
+        ],
+        "correctAnswer": 0,
+        "reward": 500,
+        "knowledgeReward": "Mỗi ngày một ít vẫn có thể tạo thành số tiền lớn."
+      },
+      {
+        "id": "l7-q3",
+        "type": "multiple_choice",
+        "prompt": "Tiết kiệm đều đặn giúp con…",
+        "options": [
+          "Tiến gần mục tiêu hơn",
+          "Quên mục tiêu đi",
+          "Hết tiền nhanh hơn"
+        ],
+        "correctAnswer": 0,
+        "reward": 500,
+        "knowledgeReward": "Đều đặn là chìa khóa của tiết kiệm."
+      },
+      {
+        "id": "l7-q4",
+        "type": "multiple_choice",
+        "prompt": "Điều gì tạo nên kết quả lớn?",
+        "options": [
+          "Đều đặn từng chút một",
+          "Chờ may mắn",
+          "Không cần cố gắng"
+        ],
+        "correctAnswer": 0,
+        "reward": 500,
+        "knowledgeReward": "Tự đạt mục tiêu mang lại niềm vui rất lớn."
+      },
+      {
+        "id": "l7-q5",
+        "type": "multiple_choice",
+        "prompt": "Niềm vui lớn là…",
+        "options": [
+          "Tự mình đạt được mục tiêu",
+          "Luôn chờ người khác mua cho",
+          "Mua không cần nghĩ"
+        ],
+        "correctAnswer": 0,
+        "reward": 500,
+        "knowledgeReward": "Tiết kiệm có mục tiêu giúp con đi xa hơn."
+      },
+      {
+        "id": "l7-q6",
+        "type": "multiple_choice",
+        "prompt": "Mục tiêu tiết kiệm nên là…",
+        "options": [
+          "Rõ ràng và cụ thể",
+          "Mơ hồ",
+          "Thay đổi liên tục"
+        ],
+        "correctAnswer": 0,
+        "reward": 500,
+        "knowledgeReward": "Mục tiêu rõ ràng giúp tiết kiệm dễ hơn."
+      },
+      {
+        "id": "l7-q7",
+        "type": "multiple_choice",
+        "prompt": "Nếu mỗi ngày để dành một ít, điều gì sẽ xảy ra?",
+        "options": [
+          "Tiền sẽ lớn dần",
+          "Không thay đổi gì",
+          "Tiền biến mất"
+        ],
+        "correctAnswer": 0,
+        "reward": 500,
+        "knowledgeReward": "Mỗi ngày một ít vẫn có thể tạo thành số tiền lớn."
+      },
+      {
+        "id": "l7-q8",
+        "type": "multiple_choice",
+        "prompt": "Điều gì giúp con kiên trì tiết kiệm?",
+        "options": [
+          "Nhớ mục tiêu của mình",
+          "Tiêu tiền ngay",
+          "Bỏ qua kế hoạch"
+        ],
+        "correctAnswer": 0,
+        "reward": 500,
+        "knowledgeReward": "Nhớ mục tiêu sẽ giúp con có động lực hơn."
+      },
+      {
+        "id": "l7-q9",
+        "type": "multiple_choice",
+        "prompt": "Chuỗi tiết kiệm trong game nhắc con điều gì?",
+        "options": [
+          "Học đều và tiết kiệm đều đặn",
+          "Mua thật nhanh",
+          "Không cần cố gắng"
+        ],
+        "correctAnswer": 0,
+        "reward": 500,
+        "knowledgeReward": "Chuỗi tiết kiệm khuyến khích sự đều đặn."
+      },
+      {
+        "id": "l7-q10",
+        "type": "multiple_choice",
+        "prompt": "Khi đạt được mục tiêu tiết kiệm, con sẽ…",
+        "options": [
+          "Thấy rất tự hào",
+          "Không cảm thấy gì",
+          "Muốn bỏ cuộc hơn"
+        ],
+        "correctAnswer": 0,
+        "reward": 500,
+        "knowledgeReward": "Tự đạt mục tiêu mang lại niềm vui lớn."
+      }
+    ],
+    "knowledgeCards": [
+      "Mục tiêu rõ ràng giúp mình tiết kiệm tốt hơn.",
+      "Mỗi ngày một ít vẫn có thể tạo thành số tiền lớn.",
+      "Đều đặn là chìa khóa của tiết kiệm.",
+      "Tự đạt mục tiêu mang lại niềm vui rất lớn.",
+      "Tiết kiệm có mục tiêu giúp con đi xa hơn.",
+      "Mục tiêu rõ ràng giúp tiết kiệm dễ hơn.",
+      "Mỗi ngày một ít vẫn có thể tạo thành số tiền lớn.",
+      "Nhớ mục tiêu sẽ giúp con có động lực hơn.",
+      "Chuỗi tiết kiệm khuyến khích sự đều đặn.",
+      "Tự đạt mục tiêu mang lại niềm vui lớn."
+    ],
+    "subtitleUrl": null,
+    "unlockRequirement": 9
+  },
+  {
+    "id": 8,
+    "title": "Dùng tiền để tạo ra giá trị",
+    "description": "Biết dùng tiền đúng cách để tạo thêm ích lợi.",
+    "lessonVideoUrl": "/videos/levels/level-8.mp4",
+    "rewardAmount": 4500,
+    "questions": [
+      {
+        "id": "l8-q1",
+        "type": "multiple_choice",
+        "prompt": "Tiền chỉ để tiêu thôi đúng hay sai?",
+        "options": [
+          "Đúng",
+          "Sai"
+        ],
+        "correctAnswer": 1,
+        "reward": 500,
+        "knowledgeReward": "Tiền không chỉ để tiêu."
+      },
+      {
+        "id": "l8-q2",
+        "type": "multiple_choice",
+        "prompt": "Dùng tiền mua vật liệu làm đồ thủ công là…",
+        "options": [
+          "Một cách tạo ra giá trị",
+          "Cách tiêu vô ích",
+          "Việc không cần thiết"
+        ],
+        "correctAnswer": 0,
+        "reward": 500,
+        "knowledgeReward": "Tiền có thể giúp tạo ra ích lợi mới."
+      },
+      {
+        "id": "l8-q3",
+        "type": "multiple_choice",
+        "prompt": "Sửa lại đồ cũ để dùng tốt hơn là…",
+        "options": [
+          "Cách dùng tiền thông minh",
+          "Việc không nên làm",
+          "Điều không có ích"
+        ],
+        "correctAnswer": 0,
+        "reward": 500,
+        "knowledgeReward": "Sửa chữa và tận dụng đồ cũ là cách dùng tiền thông minh."
+      },
+      {
+        "id": "l8-q4",
+        "type": "multiple_choice",
+        "prompt": "Mục tiêu của level này là…",
+        "options": [
+          "Giàu nhanh",
+          "Dùng tiền đúng cách để tạo ích lợi",
+          "Tiêu càng nhiều càng tốt"
+        ],
+        "correctAnswer": 1,
+        "reward": 500,
+        "knowledgeReward": "Dùng tiền đúng cách quan trọng hơn làm giàu nhanh."
+      },
+      {
+        "id": "l8-q5",
+        "type": "multiple_choice",
+        "prompt": "Biết dùng tiền thông minh giúp con…",
+        "options": [
+          "Tạo ra điều tốt hơn",
+          "Bớt suy nghĩ hơn",
+          "Mua thật nhiều món không cần thiết"
+        ],
+        "correctAnswer": 0,
+        "reward": 500,
+        "knowledgeReward": "Tiền thông minh là tiền giúp tạo ra điều tốt hơn."
+      },
+      {
+        "id": "l8-q6",
+        "type": "multiple_choice",
+        "prompt": "Mua vật liệu làm đồ thủ công là để…",
+        "options": [
+          "Tạo ra món đồ hữu ích",
+          "Tiêu vô ích",
+          "Không có mục đích"
+        ],
+        "correctAnswer": 0,
+        "reward": 500,
+        "knowledgeReward": "Tiền có thể giúp tạo ra món đồ hữu ích mới."
+      },
+      {
+        "id": "l8-q7",
+        "type": "multiple_choice",
+        "prompt": "Sửa lại hộp bút cũ là ví dụ của…",
+        "options": [
+          "Dùng tiền thông minh",
+          "Lãng phí",
+          "Không liên quan"
+        ],
+        "correctAnswer": 0,
+        "reward": 500,
+        "knowledgeReward": "Làm mới đồ cũ là cách dùng tiền thông minh."
+      },
+      {
+        "id": "l8-q8",
+        "type": "multiple_choice",
+        "prompt": "Điều quan trọng nhất ở level này là…",
+        "options": [
+          "Biết dùng tiền đúng cách",
+          "Giàu thật nhanh",
+          "Mua thật nhiều"
+        ],
+        "correctAnswer": 0,
+        "reward": 500,
+        "knowledgeReward": "Dùng tiền đúng cách quan trọng hơn làm giàu nhanh."
+      },
+      {
+        "id": "l8-q9",
+        "type": "multiple_choice",
+        "prompt": "Đồ handmade có thể mang lại điều gì?",
+        "options": [
+          "Giá trị mới",
+          "Không có ích",
+          "Chỉ để bỏ đi"
+        ],
+        "correctAnswer": 0,
+        "reward": 500,
+        "knowledgeReward": "Những món đồ tự làm có thể tạo thêm giá trị."
+      },
+      {
+        "id": "l8-q10",
+        "type": "multiple_choice",
+        "prompt": "Khi suy nghĩ sáng tạo với tiền, con đang…",
+        "options": [
+          "Tạo ích lợi mới",
+          "Tiêu bừa",
+          "Không học được gì"
+        ],
+        "correctAnswer": 0,
+        "reward": 500,
+        "knowledgeReward": "Sáng tạo giúp tiền trở nên hữu ích hơn."
+      }
+    ],
+    "knowledgeCards": [
+      "Tiền không chỉ để tiêu.",
+      "Tiền có thể giúp tạo ra ích lợi mới.",
+      "Sửa chữa và tận dụng đồ cũ là cách dùng tiền thông minh.",
+      "Dùng tiền đúng cách quan trọng hơn làm giàu nhanh.",
+      "Tiền thông minh là tiền giúp tạo ra điều tốt hơn.",
+      "Tiền có thể giúp tạo ra món đồ hữu ích mới.",
+      "Làm mới đồ cũ là cách dùng tiền thông minh.",
+      "Dùng tiền đúng cách quan trọng hơn làm giàu nhanh.",
+      "Những món đồ tự làm có thể tạo thêm giá trị.",
+      "Sáng tạo giúp tiền trở nên hữu ích hơn."
+    ],
+    "subtitleUrl": null,
+    "unlockRequirement": 9
+  },
+  {
+    "id": 9,
+    "title": "Cho đi và chia sẻ",
+    "description": "Hiểu đồng tiền cũng có ý nghĩa khi dùng để giúp người khác.",
+    "lessonVideoUrl": "/videos/levels/level-9.mp4",
+    "rewardAmount": 4750,
+    "questions": [
+      {
+        "id": "l9-q1",
+        "type": "multiple_choice",
+        "prompt": "Tiền có thể giúp con làm gì ngoài mua đồ cho mình?",
+        "options": [
+          "Giúp đỡ người khác",
+          "Không làm gì khác",
+          "Chỉ để cất đi"
+        ],
+        "correctAnswer": 0,
+        "reward": 500,
+        "knowledgeReward": "Tiền còn có thể dùng để giúp đỡ người khác."
+      },
+      {
+        "id": "l9-q2",
+        "type": "multiple_choice",
+        "prompt": "Chia sẻ sách cũ, bút, vở là…",
+        "options": [
+          "Một cách giúp đỡ ý nghĩa",
+          "Việc không cần thiết",
+          "Điều không tốt"
+        ],
+        "correctAnswer": 0,
+        "reward": 500,
+        "knowledgeReward": "Chia sẻ đúng cách là một điều đẹp."
+      },
+      {
+        "id": "l9-q3",
+        "type": "multiple_choice",
+        "prompt": "Con có cần cho đi tất cả không?",
+        "options": [
+          "Có",
+          "Không"
+        ],
+        "correctAnswer": 1,
+        "reward": 500,
+        "knowledgeReward": "Không cần cho đi tất cả để trở thành người tốt."
+      },
+      {
+        "id": "l9-q4",
+        "type": "multiple_choice",
+        "prompt": "Điều quan trọng khi chia sẻ là…",
+        "options": [
+          "Đúng lúc và đúng cách",
+          "Cho đi bừa bãi",
+          "Không cần suy nghĩ"
+        ],
+        "correctAnswer": 0,
+        "reward": 500,
+        "knowledgeReward": "Giữ cho mình và chia sẻ hợp lý đều quan trọng."
+      },
+      {
+        "id": "l9-q5",
+        "type": "multiple_choice",
+        "prompt": "Khi biết sẻ chia, đồng tiền sẽ…",
+        "options": [
+          "Ý nghĩa hơn",
+          "Biến mất ngay",
+          "Không còn giá trị"
+        ],
+        "correctAnswer": 0,
+        "reward": 500,
+        "knowledgeReward": "Tiền sẽ ý nghĩa hơn khi con biết sẻ chia."
+      },
+      {
+        "id": "l9-q6",
+        "type": "multiple_choice",
+        "prompt": "Chia sẻ sách cũ còn tốt là…",
+        "options": [
+          "Một việc ý nghĩa",
+          "Điều không cần thiết",
+          "Làm mất giá trị của sách"
+        ],
+        "correctAnswer": 0,
+        "reward": 500,
+        "knowledgeReward": "Chia sẻ đúng cách làm đồng tiền và đồ vật ý nghĩa hơn."
+      },
+      {
+        "id": "l9-q7",
+        "type": "multiple_choice",
+        "prompt": "Con nên chia sẻ khi nào?",
+        "options": [
+          "Khi phù hợp và có thể",
+          "Lúc nào cũng phải cho hết",
+          "Không bao giờ"
+        ],
+        "correctAnswer": 0,
+        "reward": 500,
+        "knowledgeReward": "Chia sẻ cần đúng lúc và đúng cách."
+      },
+      {
+        "id": "l9-q8",
+        "type": "multiple_choice",
+        "prompt": "Điều nào đúng về cho đi?",
+        "options": [
+          "Không cần cho đi tất cả",
+          "Phải cho hết mới tốt",
+          "Cho đi là mất hết"
+        ],
+        "correctAnswer": 0,
+        "reward": 500,
+        "knowledgeReward": "Con không cần cho đi tất cả để trở thành người biết sẻ chia."
+      },
+      {
+        "id": "l9-q9",
+        "type": "multiple_choice",
+        "prompt": "Tiền có thể mang lại điều gì ngoài mua đồ?",
+        "options": [
+          "Niềm vui và sự giúp đỡ",
+          "Chỉ là con số",
+          "Không giúp được ai"
+        ],
+        "correctAnswer": 0,
+        "reward": 500,
+        "knowledgeReward": "Tiền còn có thể mang đến niềm vui và sự giúp đỡ."
+      },
+      {
+        "id": "l9-q10",
+        "type": "multiple_choice",
+        "prompt": "Giữ cho mình và chia sẻ hợp lý nghĩa là…",
+        "options": [
+          "Biết cân bằng",
+          "Cho hết ngay",
+          "Không cần suy nghĩ"
+        ],
+        "correctAnswer": 0,
+        "reward": 500,
+        "knowledgeReward": "Biết cân bằng giúp con chia sẻ lành mạnh hơn."
+      }
+    ],
+    "knowledgeCards": [
+      "Tiền còn có thể dùng để giúp đỡ người khác.",
+      "Chia sẻ đúng cách là một điều đẹp.",
+      "Không cần cho đi tất cả để trở thành người tốt.",
+      "Giữ cho mình và chia sẻ hợp lý đều quan trọng.",
+      "Tiền sẽ ý nghĩa hơn khi con biết sẻ chia.",
+      "Chia sẻ đúng cách làm đồng tiền và đồ vật ý nghĩa hơn.",
+      "Chia sẻ cần đúng lúc và đúng cách.",
+      "Con không cần cho đi tất cả để trở thành người biết sẻ chia.",
+      "Tiền còn có thể mang đến niềm vui và sự giúp đỡ.",
+      "Biết cân bằng giúp con chia sẻ lành mạnh hơn."
+    ],
+    "subtitleUrl": null,
+    "unlockRequirement": 9
+  },
+  {
+    "id": 10,
+    "title": "Mục tiêu dài hạn và lãi kép nhập môn",
+    "description": "Gieo mầm tư duy tài chính dài hạn.",
+    "lessonVideoUrl": "/videos/levels/level-10.mp4",
+    "rewardAmount": 5000,
+    "questions": [
+      {
+        "id": "l10-q1",
+        "type": "multiple_choice",
+        "prompt": "Mục tiêu lớn có đạt được ngay trong một ngày không?",
+        "options": [
+          "Có",
+          "Không"
+        ],
+        "correctAnswer": 1,
+        "reward": 500,
+        "knowledgeReward": "Mục tiêu lớn cần thời gian."
+      },
+      {
+        "id": "l10-q2",
+        "type": "multiple_choice",
+        "prompt": "Để đạt mục tiêu lớn, con nên…",
+        "options": [
+          "Kiên trì để dành từng ít một",
+          "Bỏ cuộc sớm",
+          "Chỉ chờ may mắn"
+        ],
+        "correctAnswer": 0,
+        "reward": 500,
+        "knowledgeReward": "Mỗi ngày một ít có thể tạo nên kết quả lớn."
+      },
+      {
+        "id": "l10-q3",
+        "type": "multiple_choice",
+        "prompt": "Lãi kép đơn giản là…",
+        "options": [
+          "Tiền có thể lớn dần theo thời gian",
+          "Tiền biến mất theo thời gian",
+          "Tiền luôn đứng yên"
+        ],
+        "correctAnswer": 0,
+        "reward": 500,
+        "knowledgeReward": "Tiền có thể tăng dần theo thời gian nếu được giữ đúng cách."
+      },
+      {
+        "id": "l10-q4",
+        "type": "multiple_choice",
+        "prompt": "Có nên tin lời hứa “giàu nhanh, không rủi ro” không?",
+        "options": [
+          "Có",
+          "Không"
+        ],
+        "correctAnswer": 1,
+        "reward": 500,
+        "knowledgeReward": "Đừng tin lời hứa giàu nhanh mà không có rủi ro."
+      },
+      {
+        "id": "l10-q5",
+        "type": "multiple_choice",
+        "prompt": "Kiên trì hôm nay sẽ giúp con…",
+        "options": [
+          "Đạt mục tiêu lớn ngày mai",
+          "Không cần cố gắng nữa",
+          "Tiêu tiền thoải mái hơn"
+        ],
+        "correctAnswer": 0,
+        "reward": 500,
+        "knowledgeReward": "Kiên trì hôm nay giúp con đạt điều lớn ngày mai."
+      },
+      {
+        "id": "l10-q6",
+        "type": "multiple_choice",
+        "prompt": "Mục tiêu dài hạn cần điều gì?",
+        "options": [
+          "Thời gian và kiên trì",
+          "May mắn trong một ngày",
+          "Không cần kế hoạch"
+        ],
+        "correctAnswer": 0,
+        "reward": 500,
+        "knowledgeReward": "Mục tiêu dài hạn cần thời gian và sự kiên trì."
+      },
+      {
+        "id": "l10-q7",
+        "type": "multiple_choice",
+        "prompt": "Nếu con để dành đều, tiền sẽ…",
+        "options": [
+          "Lớn dần theo thời gian",
+          "Biến mất ngay",
+          "Luôn giữ nguyên"
+        ],
+        "correctAnswer": 0,
+        "reward": 500,
+        "knowledgeReward": "Để dành đều giúp số tiền lớn dần theo thời gian."
+      },
+      {
+        "id": "l10-q8",
+        "type": "multiple_choice",
+        "prompt": "Lãi kép nhập môn có thể hiểu là…",
+        "options": [
+          "Tiền tăng thêm rồi tiếp tục tăng",
+          "Tiền đứng yên mãi",
+          "Tiền giảm ngay"
+        ],
+        "correctAnswer": 0,
+        "reward": 500,
+        "knowledgeReward": "Lãi kép là khi tiền tăng thêm rồi phần tăng đó tiếp tục lớn lên."
+      },
+      {
+        "id": "l10-q9",
+        "type": "multiple_choice",
+        "prompt": "Lời hứa “giàu nhanh, không rủi ro” thường…",
+        "options": [
+          "Cần cẩn thận",
+          "Luôn đúng",
+          "Nên tin ngay"
+        ],
+        "correctAnswer": 0,
+        "reward": 500,
+        "knowledgeReward": "Những lời hứa giàu nhanh cần được xem xét cẩn thận."
+      },
+      {
+        "id": "l10-q10",
+        "type": "multiple_choice",
+        "prompt": "Điều giúp con đạt mục tiêu lớn ngày mai là…",
+        "options": [
+          "Kiên trì hôm nay",
+          "Bỏ cuộc sớm",
+          "Chờ phép màu"
+        ],
+        "correctAnswer": 0,
+        "reward": 500,
+        "knowledgeReward": "Kiên trì hôm nay giúp con đạt điều lớn ngày mai."
+      }
+    ],
+    "knowledgeCards": [
+      "Mục tiêu lớn cần thời gian.",
+      "Mỗi ngày một ít có thể tạo nên kết quả lớn.",
+      "Tiền có thể tăng dần theo thời gian nếu được giữ đúng cách.",
+      "Đừng tin lời hứa giàu nhanh mà không có rủi ro.",
+      "Kiên trì hôm nay giúp con đạt điều lớn ngày mai.",
+      "Mục tiêu dài hạn cần thời gian và sự kiên trì.",
+      "Để dành đều giúp số tiền lớn dần theo thời gian.",
+      "Lãi kép là khi tiền tăng thêm rồi phần tăng đó tiếp tục lớn lên.",
+      "Những lời hứa giàu nhanh cần được xem xét cẩn thận.",
+      "Kiên trì hôm nay giúp con đạt điều lớn ngày mai."
+    ],
+    "subtitleUrl": null,
+    "unlockRequirement": 9
+  }
+]

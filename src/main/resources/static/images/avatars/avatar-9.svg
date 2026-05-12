@@ -1,0 +1,24 @@
+<svg width="128" height="128" viewBox="0 0 128 128" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <linearGradient id="bg9" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#FFF6D2"/>
+      <stop offset="55%" stop-color="#F4C748"/>
+      <stop offset="100%" stop-color="#C89016"/>
+    </linearGradient>
+    <linearGradient id="pig9" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#FFE7A3"/>
+      <stop offset="50%" stop-color="#F5C141"/>
+      <stop offset="100%" stop-color="#D79A12"/>
+    </linearGradient>
+  </defs>
+  <rect width="128" height="128" rx="32" fill="url(#bg9)"/>
+  <circle cx="64" cy="66" r="34" fill="url(#pig9)"/>
+  <circle cx="43" cy="42" r="12" fill="url(#pig9)"/>
+  <circle cx="85" cy="42" r="12" fill="url(#pig9)"/>
+  <circle cx="53" cy="60" r="4.5" fill="#5B4300"/>
+  <circle cx="75" cy="60" r="4.5" fill="#5B4300"/>
+  <ellipse cx="64" cy="77" rx="17" ry="12" fill="#C4830E"/>
+  <circle cx="58" cy="77" r="3.2" fill="#FFFFFF" opacity="0.65"/>
+  <circle cx="70" cy="77" r="3.2" fill="#FFFFFF" opacity="0.65"/>
+  <text x="64" y="116" text-anchor="middle" font-family="Arial, sans-serif" font-size="14" font-weight="700" fill="#6A4A00">A9</text>
+</svg>

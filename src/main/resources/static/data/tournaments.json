@@ -1,0 +1,41 @@
+{
+  "weekly": {
+    "id": "weekly-money-explorer",
+    "title": "Mini-tournament: Siêu Nhận Diện Tiền",
+    "theme": "Nhận diện tiền Việt Nam và lập kế hoạch chi tiêu",
+    "description": "Hoàn thành các level về tiền Việt Nam, tiết kiệm và sổ chi tiêu để leo hạng trong tuần này.",
+    "endsInLabel": "Còn 5 ngày 12 giờ",
+    "reward": "Badge Nhà Sưu Tầm Tiền + 20.000đ trong game",
+    "eligibleLevels": [2, 4, 5],
+    "tasks": [
+      {
+        "id": "weekly-task-1",
+        "label": "Hoàn thành Level 2 – Làm quen với tiền Việt Nam",
+        "type": "complete_level",
+        "levelId": 2,
+        "target": 1,
+        "points": 30
+      },
+      {
+        "id": "weekly-task-2",
+        "label": "Đạt 120 Finchi Score trong tuần",
+        "type": "score_weekly",
+        "target": 120,
+        "points": 40
+      },
+      {
+        "id": "weekly-task-3",
+        "label": "Đạt chuỗi tiết kiệm 3 ngày",
+        "type": "streak",
+        "target": 3,
+        "points": 25
+      }
+    ]
+  },
+  "monthly": {
+    "id": "monthly-saving-season",
+    "title": "Season tháng: Nhà quản lý tiền nhí",
+    "description": "Tích lũy Finchi Score, hoàn thành thử thách tháng và nhận khung avatar cùng huy hiệu mùa giải.",
+    "reward": "Cúp tháng + khung avatar + sticker hiếm"
+  }
+}

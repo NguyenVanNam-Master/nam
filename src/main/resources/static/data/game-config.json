@@ -1,0 +1,21 @@
+{
+  "title": "Finchi",
+  "dailyLimits": {
+    "videos": 9999,
+    "tasks": 10
+  },
+  "introVideoUrl": "/videos/intro.mp4",
+  "introFallbackDurationSeconds": 8,
+  "milestones": [
+    3,
+    5,
+    8,
+    10
+  ],
+  "milestoneMessages": {
+    "3": "Tốt lắm, bạn đang tiết kiệm rất đều!",
+    "5": "Bạn đã chạm mốc mới, cố gắng thêm nhé!",
+    "8": "Finchi thấy bạn đang tiến bộ rất nhanh!",
+    "10": "Tuyệt vời! Finchi rất tự hào về bạn!"
+  }
+}
