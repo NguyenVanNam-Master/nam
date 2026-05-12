@@ -75,6 +75,7 @@ public class FinchiApplication {
         server.createContext("/api/voice/generate", new VoicePolicyHandler());
         server.createContext("/api/admin/correction-feedback", new AdminCorrectionFeedbackHandler());
         server.createContext("/api/admin/rubric-patches", new AdminRubricPatchHandler());
+        server.createContext("/api/admin/import-account", new AdminImportAccountHandler());
         server.createContext("/api/student/", new StudentLearningStateHandler());
         server.createContext("/api/parent/", new ParentContextSummaryHandler());
         server.createContext("/", new StaticFileHandler());
@@ -129,6 +130,7 @@ public class FinchiApplication {
         Files.createDirectories(RUBRIC_PATCHES_DIR);
         Files.createDirectories(APPLIED_RUBRICS_DIR);
         Files.createDirectories(CORRECTION_AUDIT_DIR);
+        normalizeAccountFiles();
     }
 
     private static void printBanner(int port) {
@@ -186,9 +188,71 @@ public class FinchiApplication {
         return username != null && username.matches("[A-Za-z0-9_]{3,24}");
     }
 
+    private static boolean isSupportedUsername(String username) {
+        if (username == null) {
+            return false;
+        }
+        String value = username.trim();
+        if (value.isBlank() || value.length() > 64 || value.contains("..")) {
+            return false;
+        }
+        String blocked = "/\\:*?\"<>|";
+        for (int i = 0; i < value.length(); i++) {
+            char ch = value.charAt(i);
+            if (ch < 32 || blocked.indexOf(ch) >= 0) {
+                return false;
+            }
+        }
+        return true;
+    }
+
+    private static void normalizeAccountFiles() throws IOException {
+        if (!Files.exists(ACCOUNTS_DIR)) {
+            return;
+        }
+        try (var stream = Files.list(ACCOUNTS_DIR)) {
+            for (Path file : stream.filter(path -> path.getFileName().toString().endsWith(".properties")).toList()) {
+                String filename = file.getFileName().toString();
+                String username = filename.substring(0, filename.length() - ".properties".length());
+                Path canonical = accountFile(username);
+                if (!Files.exists(canonical)) {
+                    try {
+                        Files.move(file, canonical);
+                    } catch (IOException ignored) {
+                    }
+                }
+            }
+        }
+    }
+
+    private static Path resolveAccountFile(String username) throws IOException {
+        Path canonical = accountFile(username);
+        if (Files.exists(canonical) || !Files.exists(ACCOUNTS_DIR)) {
+            return canonical;
+        }
+        try (var stream = Files.list(ACCOUNTS_DIR)) {
+            for (Path file : stream.filter(path -> path.getFileName().toString().endsWith(".properties")).toList()) {
+                String filename = file.getFileName().toString();
+                String currentUsername = filename.substring(0, filename.length() - ".properties".length());
+                if (!currentUsername.equalsIgnoreCase(username)) {
+                    continue;
+                }
+                if (!Files.exists(canonical)) {
+                    try {
+                        Files.move(file, canonical);
+                        return canonical;
+                    } catch (IOException ignored) {
+                    }
+                }
+                return file;
+            }
+        }
+        return canonical;
+    }
+
     private static Properties loadAccount(String username) throws IOException {
         Properties props = new Properties();
-        Path file = accountFile(username);
+        Path file = resolveAccountFile(username);
         if (Files.exists(file)) {
             try (InputStream input = Files.newInputStream(file)) {
                 props.load(input);
@@ -780,7 +844,7 @@ public class FinchiApplication {
                 sendJson(exchange, 400, "{\"ok\":false,\"message\":\"Mật khẩu cần ít nhất 4 ký tự.\"}");
                 return;
             }
-            Path file = accountFile(username);
+            Path file = resolveAccountFile(username);
             if (Files.exists(file)) {
                 sendJson(exchange, 409, "{\"ok\":false,\"message\":\"Tài khoản này đã tồn tại.\"}");
                 return;
@@ -812,8 +876,8 @@ public class FinchiApplication {
             Map<String, String> form = parseForm(exchange);
             String username = form.getOrDefault("username", "").trim();
             String password = form.getOrDefault("password", "").trim();
-            if (!isValidUsername(username)) {
-                sendJson(exchange, 400, "{\"ok\":false,\"message\":\"Tài khoản không hợp lệ.\"}");
+            if (!isSupportedUsername(username)) {
+                sendJson(exchange, 400, "{\"ok\":false,\"message\":\"Tài khoản không hợp lệ hoặc không được hỗ trợ.\"}");
                 return;
             }
             Properties props = loadAccount(username);
@@ -840,8 +904,8 @@ public class FinchiApplication {
             String username = form.getOrDefault("username", "").trim();
             String parentName = form.getOrDefault("parentName", "").trim();
             String password = form.getOrDefault("password", "").trim();
-            if (!isValidUsername(username)) {
-                sendJson(exchange, 400, "{\"ok\":false,\"message\":\"Tên tài khoản học sinh không hợp lệ.\"}");
+            if (!isSupportedUsername(username)) {
+                sendJson(exchange, 400, "{\"ok\":false,\"message\":\"Tên tài khoản học sinh không hợp lệ hoặc không được hỗ trợ.\"}");
                 return;
             }
             if (parentName.length() < 2) {
@@ -878,8 +942,8 @@ public class FinchiApplication {
             Map<String, String> form = parseForm(exchange);
             String username = form.getOrDefault("username", "").trim();
             String password = form.getOrDefault("password", "").trim();
-            if (!isValidUsername(username)) {
-                sendJson(exchange, 400, "{\"ok\":false,\"message\":\"Tên tài khoản học sinh không hợp lệ.\"}");
+            if (!isSupportedUsername(username)) {
+                sendJson(exchange, 400, "{\"ok\":false,\"message\":\"Tên tài khoản học sinh không hợp lệ hoặc không được hỗ trợ.\"}");
                 return;
             }
             Properties props = loadAccount(username);
@@ -908,8 +972,8 @@ public class FinchiApplication {
                 return;
             }
             String username = parseQuery(exchange.getRequestURI()).getOrDefault("username", "").trim();
-            if (!isValidUsername(username)) {
-                sendJson(exchange, 400, "{\"ok\":false,\"message\":\"Tài khoản không hợp lệ.\"}");
+            if (!isSupportedUsername(username)) {
+                sendJson(exchange, 400, "{\"ok\":false,\"message\":\"Tài khoản không hợp lệ hoặc không được hỗ trợ.\"}");
                 return;
             }
             Properties props = loadAccount(username);
@@ -930,8 +994,8 @@ public class FinchiApplication {
             }
             Map<String, String> form = parseForm(exchange);
             String username = form.getOrDefault("username", "").trim();
-            if (!isValidUsername(username)) {
-                sendJson(exchange, 400, "{\"ok\":false,\"message\":\"Tài khoản không hợp lệ.\"}");
+            if (!isSupportedUsername(username)) {
+                sendJson(exchange, 400, "{\"ok\":false,\"message\":\"Tài khoản không hợp lệ hoặc không được hỗ trợ.\"}");
                 return;
             }
             Properties props = loadAccount(username);
@@ -1101,8 +1165,8 @@ public class FinchiApplication {
             }
             Map<String, String> form = parseForm(exchange);
             String username = form.getOrDefault("username", "").trim();
-            if (!isValidUsername(username)) {
-                sendJson(exchange, 400, "{\"ok\":false,\"message\":\"Tài khoản học sinh không hợp lệ.\"}");
+            if (!isSupportedUsername(username)) {
+                sendJson(exchange, 400, "{\"ok\":false,\"message\":\"Tài khoản học sinh không hợp lệ hoặc không được hỗ trợ.\"}");
                 return;
             }
             Properties account = loadAccount(username);
@@ -1144,8 +1208,8 @@ public class FinchiApplication {
             }
             Map<String, String> form = parseForm(exchange);
             String username = form.getOrDefault("username", "").trim();
-            if (!isValidUsername(username)) {
-                sendJson(exchange, 400, "{\"ok\":false,\"message\":\"Tài khoản học sinh không hợp lệ.\"}");
+            if (!isSupportedUsername(username)) {
+                sendJson(exchange, 400, "{\"ok\":false,\"message\":\"Tài khoản học sinh không hợp lệ hoặc không được hỗ trợ.\"}");
                 return;
             }
             Properties account = loadAccount(username);
@@ -1176,8 +1240,8 @@ public class FinchiApplication {
             }
             Map<String, String> form = parseForm(exchange);
             String username = form.getOrDefault("username", "").trim();
-            if (!isValidUsername(username)) {
-                sendJson(exchange, 400, "{\"ok\":false,\"message\":\"Tài khoản học sinh không hợp lệ.\"}");
+            if (!isSupportedUsername(username)) {
+                sendJson(exchange, 400, "{\"ok\":false,\"message\":\"Tài khoản học sinh không hợp lệ hoặc không được hỗ trợ.\"}");
                 return;
             }
             String role = form.getOrDefault("role", "student").trim();
@@ -1326,8 +1390,8 @@ public class FinchiApplication {
             }
             Map<String, String> form = parseForm(exchange);
             String username = form.getOrDefault("username", "").trim();
-            if (!isValidUsername(username)) {
-                sendJson(exchange, 400, "{\"ok\":false,\"message\":\"Tài khoản học sinh không hợp lệ.\"}");
+            if (!isSupportedUsername(username)) {
+                sendJson(exchange, 400, "{\"ok\":false,\"message\":\"Tài khoản học sinh không hợp lệ hoặc không được hỗ trợ.\"}");
                 return;
             }
             Properties account = loadAccount(username);
@@ -1572,6 +1636,73 @@ public class FinchiApplication {
         }
     }
 
+    private static final class AdminImportAccountHandler implements HttpHandler {
+        @Override
+        public void handle(HttpExchange exchange) throws IOException {
+            if (!"POST".equalsIgnoreCase(exchange.getRequestMethod())) {
+                exchange.sendResponseHeaders(405, -1);
+                return;
+            }
+            String expectedToken = System.getenv("ACCOUNT_IMPORT_TOKEN");
+            if (expectedToken == null || expectedToken.isBlank()) {
+                sendJson(exchange, 503, "{\"ok\":false,\"message\":\"Chưa cấu hình ACCOUNT_IMPORT_TOKEN trên server.\"}");
+                return;
+            }
+
+            Map<String, String> form = parseForm(exchange);
+            String token = form.getOrDefault("token", "");
+            if (!expectedToken.equals(token)) {
+                sendJson(exchange, 403, "{\"ok\":false,\"message\":\"Sai token import account.\"}");
+                return;
+            }
+
+            String username = form.getOrDefault("username", "").trim();
+            if (!isSupportedUsername(username)) {
+                sendJson(exchange, 400, "{\"ok\":false,\"message\":\"Tên tài khoản import không hợp lệ hoặc không được hỗ trợ.\"}");
+                return;
+            }
+
+            String content = form.getOrDefault("content", "");
+            if (content.isBlank()) {
+                sendJson(exchange, 400, "{\"ok\":false,\"message\":\"Thiếu nội dung account để import.\"}");
+                return;
+            }
+
+            boolean overwrite = parseBoolean(form.getOrDefault("overwrite", "false"));
+            Path destination = accountFile(username);
+            if (Files.exists(destination) && !overwrite) {
+                sendJson(
+                        exchange,
+                        200,
+                        "{"
+                                + "\"ok\":true,"
+                                + "\"status\":\"skipped\","
+                                + "\"username\":\"" + jsonEscape(username) + "\""
+                                + "}"
+                );
+                return;
+            }
+
+            Files.writeString(
+                    destination,
+                    content,
+                    StandardCharsets.UTF_8,
+                    StandardOpenOption.CREATE,
+                    StandardOpenOption.TRUNCATE_EXISTING,
+                    StandardOpenOption.WRITE
+            );
+            sendJson(
+                    exchange,
+                    200,
+                    "{"
+                            + "\"ok\":true,"
+                            + "\"status\":\"" + (overwrite ? "overwritten" : "imported") + "\","
+                            + "\"username\":\"" + jsonEscape(username) + "\""
+                            + "}"
+            );
+        }
+    }
+
     private static final class VoicePolicyHandler implements HttpHandler {
         @Override
         public void handle(HttpExchange exchange) throws IOException {
@@ -1614,8 +1745,8 @@ public class FinchiApplication {
             }
             String suffix = requestState ? "/learning-state" : "/learning-memory";
             String username = path.substring(prefix.length(), path.length() - suffix.length()).trim();
-            if (!isValidUsername(username)) {
-                sendJson(exchange, 400, "{\"ok\":false,\"message\":\"Tài khoản học sinh không hợp lệ.\"}");
+            if (!isSupportedUsername(username)) {
+                sendJson(exchange, 400, "{\"ok\":false,\"message\":\"Tài khoản học sinh không hợp lệ hoặc không được hỗ trợ.\"}");
                 return;
             }
             if (requestMemory) {
@@ -1672,8 +1803,8 @@ public class FinchiApplication {
                 return;
             }
             String username = path.substring(prefix.length(), path.length() - suffix.length()).trim();
-            if (!isValidUsername(username)) {
-                sendJson(exchange, 400, "{\"ok\":false,\"message\":\"Tài khoản học sinh không hợp lệ.\"}");
+            if (!isSupportedUsername(username)) {
+                sendJson(exchange, 400, "{\"ok\":false,\"message\":\"Tài khoản học sinh không hợp lệ hoặc không được hỗ trợ.\"}");
                 return;
             }
             Properties account = loadAccount(username);

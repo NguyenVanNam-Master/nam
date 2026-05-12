@@ -74,6 +74,23 @@ Repo này đã được chuẩn bị để deploy full-stack bằng Docker.
 - Frontend: `/`
 - Dữ liệu runtime: thư mục `/app/server-data`
 
+### Khôi phục account cũ lên Railway
+Nếu account cũ đang nằm trong thư mục local `server-data/accounts`, không nên commit chúng vào repo public.
+
+1. Vào Railway `Variables`
+2. Thêm biến:
+   - `ACCOUNT_IMPORT_TOKEN=<chuoi-bi-mat-cua-ban>`
+3. Deploy lại service
+4. Trên máy local, chạy:
+   ```powershell
+   .\import-accounts-to-railway.ps1 -BaseUrl "https://ten-domain-cua-ban.up.railway.app" -Token "<chuoi-bi-mat-cua-ban>" -Overwrite
+   ```
+5. Sau khi import xong, có thể xóa `ACCOUNT_IMPORT_TOKEN` khỏi Railway và deploy lại để đóng đường import
+
+Ghi chú:
+- Backend đã hỗ trợ account cũ có khoảng trắng, chữ hoa/thường khác nhau và ký tự có dấu khi đăng nhập trên Linux/Railway.
+- Script import đọc trực tiếp các file `.properties` trong `server-data/accounts` trên máy của bạn.
+
 ## Truy cập từ thiết bị khác cùng mạng
 Khi chạy server, script cũng sẽ in thêm một link dạng:
 
