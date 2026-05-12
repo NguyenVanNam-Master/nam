@@ -1,0 +1,13 @@
+.git
+.gitignore
+.vscode
+
+target
+out
+out-test
+out-test-ai
+server-data
+
+src.rar
+target.rar
+report-*.txt

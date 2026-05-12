@@ -45,6 +45,35 @@
 - Script sẽ tự in ra link mở game
 - Mở link local hiện trên màn hình, ví dụ `http://localhost:8080`
 
+## Deploy public đầy đủ
+Repo này đã được chuẩn bị để deploy full-stack bằng Docker.
+
+### Cách deploy nhanh trên Railway
+1. Push code mới nhất lên GitHub
+2. Vào Railway và tạo `New Project`
+3. Chọn `Deploy from GitHub repo`
+4. Chọn repo `nam`
+5. Railway sẽ tự build từ `Dockerfile`
+6. Tạo một `Volume` và mount vào:
+   - `/app/server-data`
+7. Nếu muốn giữ mặc định, không cần sửa `PORT`
+8. Nếu mount volume ở path khác, có thể đặt thêm:
+   - `DATA_DIR=/duong-dan-ban-mount`
+9. Mở phần `Networking` và bấm `Generate Domain`
+10. Sau khi deploy xong, mở:
+   - `/api/health` để kiểm tra server
+   - link domain public để dùng web
+
+### Vì sao cần volume
+- Dự án lưu dữ liệu người chơi, parent dashboard và AI logs trong thư mục `server-data`
+- Nếu không mount volume, dữ liệu đó sẽ mất sau mỗi lần redeploy hoặc restart
+- App sẽ tự ưu tiên `DATA_DIR`, sau đó tới `RAILWAY_VOLUME_MOUNT_PATH`, rồi mới dùng `server-data` local
+
+### Kiểm tra production
+- Health check: `/api/health`
+- Frontend: `/`
+- Dữ liệu runtime: thư mục `/app/server-data`
+
 ## Truy cập từ thiết bị khác cùng mạng
 Khi chạy server, script cũng sẽ in thêm một link dạng:
 

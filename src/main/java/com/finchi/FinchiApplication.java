@@ -37,7 +37,7 @@ import java.util.concurrent.Executors;
 
 public class FinchiApplication {
     private static final int DEFAULT_PORT = 8080;
-    private static final Path DATA_DIR = Path.of("server-data");
+    private static final Path DATA_DIR = resolveDataDir();
     private static final Path ACCOUNTS_DIR = DATA_DIR.resolve("accounts");
     private static final Path AI_DIR = DATA_DIR.resolve("ai");
     private static final Path STUDENT_EVENTS_DIR = AI_DIR.resolve("student-events");
@@ -55,14 +55,7 @@ public class FinchiApplication {
     public static void main(String[] args) throws IOException {
         ensureDataDirs();
 
-        int port = DEFAULT_PORT;
-        if (args.length > 0) {
-            try {
-                port = Integer.parseInt(args[0]);
-            } catch (NumberFormatException ignored) {
-                System.out.println("Port không hợp lệ, dùng mặc định 8080.");
-            }
-        }
+        int port = resolvePort(args);
 
         HttpServer server = HttpServer.create(new InetSocketAddress("0.0.0.0", port), 0);
         server.createContext("/api/health", new HealthHandler());
@@ -89,6 +82,39 @@ public class FinchiApplication {
         server.start();
 
         printBanner(port);
+    }
+
+    private static Path resolveDataDir() {
+        String configured = System.getenv("DATA_DIR");
+        if (configured != null && !configured.isBlank()) {
+            return Path.of(configured.trim());
+        }
+        String railwayVolumePath = System.getenv("RAILWAY_VOLUME_MOUNT_PATH");
+        if (railwayVolumePath != null && !railwayVolumePath.isBlank()) {
+            return Path.of(railwayVolumePath.trim());
+        }
+        return Path.of("server-data");
+    }
+
+    private static int resolvePort(String[] args) {
+        if (args != null && args.length > 0) {
+            try {
+                return Integer.parseInt(args[0]);
+            } catch (NumberFormatException ignored) {
+                System.out.println("Port từ tham số không hợp lệ, kiểm tra biến môi trường PORT...");
+            }
+        }
+
+        String envPort = System.getenv("PORT");
+        if (envPort != null && !envPort.isBlank()) {
+            try {
+                return Integer.parseInt(envPort.trim());
+            } catch (NumberFormatException ignored) {
+                System.out.println("Biến môi trường PORT không hợp lệ, dùng mặc định 8080.");
+            }
+        }
+
+        return DEFAULT_PORT;
     }
 
     private static void ensureDataDirs() throws IOException {
