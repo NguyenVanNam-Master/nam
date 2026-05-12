@@ -51,6 +51,11 @@ public class FinchiApplication {
     private static final Path RUBRIC_PATCHES_DIR = AI_CORRECTION_DIR.resolve("rubric-patches");
     private static final Path APPLIED_RUBRICS_DIR = AI_CORRECTION_DIR.resolve("applied-rubrics");
     private static final Path CORRECTION_AUDIT_DIR = AI_CORRECTION_DIR.resolve("audit");
+    private static final long ACCOUNT_SNAPSHOT_TTL_MS = 5000;
+    private static volatile long accountSnapshotLoadedAt = 0;
+    private static volatile List<AccountSnapshotEntry> accountSnapshotCache = List.of();
+
+    private record AccountSnapshotEntry(String username, Properties props) {}
 
     public static void main(String[] args) throws IOException {
         ensureDataDirs();
@@ -69,6 +74,7 @@ public class FinchiApplication {
         server.createContext("/api/clans", new ClanListHandler());
         server.createContext("/api/events/student", new StudentEventHandler());
         server.createContext("/api/events/parent", new ParentEventHandler());
+        server.createContext("/api/events/batch", new EventBatchHandler());
         server.createContext("/api/ai/intervention", new AiInterventionHandler());
         server.createContext("/api/ai/correction-feedback", new CorrectionFeedbackHandler());
         server.createContext("/api/ai/verify-answer", new VerifyAnswerHandler());
@@ -184,6 +190,11 @@ public class FinchiApplication {
         return ACCOUNTS_DIR.resolve(username.toLowerCase(Locale.ROOT) + ".properties");
     }
 
+    private static void invalidateAccountSnapshotCache() {
+        accountSnapshotLoadedAt = 0;
+        accountSnapshotCache = List.of();
+    }
+
     private static boolean isValidUsername(String username) {
         return username != null && username.matches("[A-Za-z0-9_]{3,24}");
     }
@@ -223,6 +234,7 @@ public class FinchiApplication {
                 }
             }
         }
+        invalidateAccountSnapshotCache();
     }
 
     private static Path resolveAccountFile(String username) throws IOException {
@@ -265,6 +277,32 @@ public class FinchiApplication {
         try (OutputStream output = Files.newOutputStream(accountFile(username))) {
             props.store(output, "Finchi account");
         }
+        invalidateAccountSnapshotCache();
+    }
+
+    private static synchronized List<AccountSnapshotEntry> listAccountSnapshot() throws IOException {
+        long now = System.currentTimeMillis();
+        if (!accountSnapshotCache.isEmpty() && now - accountSnapshotLoadedAt < ACCOUNT_SNAPSHOT_TTL_MS) {
+            return accountSnapshotCache;
+        }
+        List<AccountSnapshotEntry> items = new ArrayList<>();
+        if (Files.exists(ACCOUNTS_DIR)) {
+            try (var stream = Files.list(ACCOUNTS_DIR)) {
+                for (Path path : stream.filter(file -> file.getFileName().toString().endsWith(".properties")).toList()) {
+                    try (InputStream input = Files.newInputStream(path)) {
+                        Properties props = new Properties();
+                        props.load(input);
+                        String filename = path.getFileName().toString();
+                        String username = filename.substring(0, filename.length() - ".properties".length());
+                        items.add(new AccountSnapshotEntry(username, props));
+                    } catch (IOException ignored) {
+                    }
+                }
+            }
+        }
+        accountSnapshotCache = List.copyOf(items);
+        accountSnapshotLoadedAt = now;
+        return accountSnapshotCache;
     }
 
     private static Path studentEventFile(String username) {
@@ -321,8 +359,7 @@ public class FinchiApplication {
         }
     }
 
-    private static Map<String, String> parseForm(HttpExchange exchange) throws IOException {
-        String body = new String(exchange.getRequestBody().readAllBytes(), StandardCharsets.UTF_8);
+    private static Map<String, String> parseFormBody(String body) {
         Map<String, String> result = new LinkedHashMap<>();
         if (body.isBlank()) return result;
         for (String pair : body.split("&")) {
@@ -335,18 +372,15 @@ public class FinchiApplication {
         return result;
     }
 
+    private static Map<String, String> parseForm(HttpExchange exchange) throws IOException {
+        String body = new String(exchange.getRequestBody().readAllBytes(), StandardCharsets.UTF_8);
+        return parseFormBody(body);
+    }
+
     private static Map<String, String> parseQuery(URI uri) {
-        Map<String, String> result = new LinkedHashMap<>();
         String query = uri.getRawQuery();
-        if (query == null || query.isBlank()) return result;
-        for (String pair : query.split("&")) {
-            if (pair.isBlank()) continue;
-            String[] parts = pair.split("=", 2);
-            String key = URLDecoder.decode(parts[0], StandardCharsets.UTF_8);
-            String value = parts.length > 1 ? URLDecoder.decode(parts[1], StandardCharsets.UTF_8) : "";
-            result.put(key, value);
-        }
-        return result;
+        if (query == null || query.isBlank()) return new LinkedHashMap<>();
+        return parseFormBody(query);
     }
 
     private static String jsonEscape(String value) {
@@ -819,6 +853,44 @@ public class FinchiApplication {
                 + "}";
     }
 
+    private static Properties processStudentEvent(String username, Map<String, String> form) throws IOException {
+        Properties account = loadAccount(username);
+        if (account.isEmpty()) {
+            throw new IllegalStateException("Không tìm thấy tài khoản học sinh.");
+        }
+        Properties stateProps = loadProperties(studentStateFile(username));
+        updateAiState(stateProps, form);
+        saveProperties(studentStateFile(username), stateProps, "Finchi student learning state");
+        appendLog(
+                studentEventFile(username),
+                Instant.now() + "|event=" + form.getOrDefault("eventType", "")
+                        + "|lesson=" + form.getOrDefault("currentLesson", "")
+                        + "|mission=" + form.getOrDefault("currentMission", "")
+                        + "|skill=" + form.getOrDefault("skillTag", "")
+                        + "|correct=" + form.getOrDefault("isCorrect", "false")
+                        + "|attempt=" + form.getOrDefault("attemptCount", "0")
+        );
+        return stateProps;
+    }
+
+    private static Properties processParentEvent(String username, Map<String, String> form) throws IOException {
+        Properties account = loadAccount(username);
+        if (account.isEmpty()) {
+            throw new IllegalStateException("Không tìm thấy tài khoản học sinh.");
+        }
+        Properties stateProps = loadProperties(studentStateFile(username));
+        updateAiState(stateProps, form);
+        saveProperties(studentStateFile(username), stateProps, "Finchi student learning state");
+        appendLog(
+                parentEventFile(username),
+                Instant.now() + "|event=" + form.getOrDefault("eventType", "")
+                        + "|page=" + form.getOrDefault("currentPage", "")
+                        + "|weakSkill=" + form.getOrDefault("weakSkill", "")
+                        + "|weakLevel=" + form.getOrDefault("weakLevel", "")
+        );
+        return stateProps;
+    }
+
     private static final class HealthHandler implements HttpHandler {
         @Override
         public void handle(HttpExchange exchange) throws IOException {
@@ -1040,27 +1112,19 @@ public class FinchiApplication {
             }
             String mode = parseQuery(exchange.getRequestURI()).getOrDefault("mode", "daily");
             List<Map<String, String>> entries = new ArrayList<>();
-            if (Files.exists(ACCOUNTS_DIR)) {
-                try (var stream = Files.list(ACCOUNTS_DIR)) {
-                    stream.filter(path -> path.getFileName().toString().endsWith(".properties")).forEach(path -> {
-                        try (InputStream input = Files.newInputStream(path)) {
-                            Properties props = new Properties();
-                            props.load(input);
-                            Map<String, String> entry = new LinkedHashMap<>();
-                            entry.put("name", props.getProperty("nickname", path.getFileName().toString().replace(".properties", "")));
-                            entry.put("avatarId", props.getProperty("avatarId", "ava-1"));
-                            String scoreKey = switch (mode) {
-                                case "weekly" -> "weeklyScore";
-                                case "monthly" -> "monthlyScore";
-                                case "tournament" -> "tournamentWeekly";
-                                default -> "dailyScore";
-                            };
-                            entry.put("score", props.getProperty(scoreKey, "0"));
-                            entries.add(entry);
-                        } catch (IOException ignored) {
-                        }
-                    });
-                }
+            for (AccountSnapshotEntry snapshot : listAccountSnapshot()) {
+                Properties props = snapshot.props();
+                Map<String, String> entry = new LinkedHashMap<>();
+                entry.put("name", props.getProperty("nickname", snapshot.username()));
+                entry.put("avatarId", props.getProperty("avatarId", "ava-1"));
+                String scoreKey = switch (mode) {
+                    case "weekly" -> "weeklyScore";
+                    case "monthly" -> "monthlyScore";
+                    case "tournament" -> "tournamentWeekly";
+                    default -> "dailyScore";
+                };
+                entry.put("score", props.getProperty(scoreKey, "0"));
+                entries.add(entry);
             }
             entries.sort(Comparator.comparingInt((Map<String, String> item) -> Integer.parseInt(item.getOrDefault("score", "0"))).reversed());
             StringBuilder builder = new StringBuilder();
@@ -1089,36 +1153,28 @@ public class FinchiApplication {
             }
             Map<String, Map<String, String>> clans = new LinkedHashMap<>();
             Map<String, List<Map<String, String>>> membersByClan = new LinkedHashMap<>();
-            if (Files.exists(ACCOUNTS_DIR)) {
-                try (var stream = Files.list(ACCOUNTS_DIR)) {
-                    stream.filter(path -> path.getFileName().toString().endsWith(".properties")).forEach(path -> {
-                        try (InputStream input = Files.newInputStream(path)) {
-                            Properties props = new Properties();
-                            props.load(input);
-                            String clanId = props.getProperty("clanId", "").trim();
-                            if (clanId.isBlank()) return;
-                            Map<String, String> clan = clans.computeIfAbsent(clanId, key -> {
-                                Map<String, String> item = new LinkedHashMap<>();
-                                item.put("id", clanId);
-                                item.put("name", props.getProperty("clanName", clanId));
-                                item.put("focus", props.getProperty("clanFocus", ""));
-                                item.put("description", props.getProperty("clanDescription", ""));
-                                return item;
-                            });
-                            if (clan.getOrDefault("name", "").isBlank()) clan.put("name", props.getProperty("clanName", clanId));
-                            if (clan.getOrDefault("focus", "").isBlank()) clan.put("focus", props.getProperty("clanFocus", ""));
-                            if (clan.getOrDefault("description", "").isBlank()) clan.put("description", props.getProperty("clanDescription", ""));
+            for (AccountSnapshotEntry snapshot : listAccountSnapshot()) {
+                Properties props = snapshot.props();
+                String clanId = props.getProperty("clanId", "").trim();
+                if (clanId.isBlank()) continue;
+                Map<String, String> clan = clans.computeIfAbsent(clanId, key -> {
+                    Map<String, String> item = new LinkedHashMap<>();
+                    item.put("id", clanId);
+                    item.put("name", props.getProperty("clanName", clanId));
+                    item.put("focus", props.getProperty("clanFocus", ""));
+                    item.put("description", props.getProperty("clanDescription", ""));
+                    return item;
+                });
+                if (clan.getOrDefault("name", "").isBlank()) clan.put("name", props.getProperty("clanName", clanId));
+                if (clan.getOrDefault("focus", "").isBlank()) clan.put("focus", props.getProperty("clanFocus", ""));
+                if (clan.getOrDefault("description", "").isBlank()) clan.put("description", props.getProperty("clanDescription", ""));
 
-                            List<Map<String, String>> members = membersByClan.computeIfAbsent(clanId, key -> new ArrayList<>());
-                            Map<String, String> member = new LinkedHashMap<>();
-                            member.put("username", path.getFileName().toString().replace(".properties", ""));
-                            member.put("name", props.getProperty("nickname", path.getFileName().toString().replace(".properties", "")));
-                            member.put("avatarId", props.getProperty("avatarId", "ava-1"));
-                            members.add(member);
-                        } catch (IOException ignored) {
-                        }
-                    });
-                }
+                List<Map<String, String>> members = membersByClan.computeIfAbsent(clanId, key -> new ArrayList<>());
+                Map<String, String> member = new LinkedHashMap<>();
+                member.put("username", snapshot.username());
+                member.put("name", props.getProperty("nickname", snapshot.username()));
+                member.put("avatarId", props.getProperty("avatarId", "ava-1"));
+                members.add(member);
             }
 
             List<Map<String, String>> orderedClans = new ArrayList<>(clans.values());
@@ -1169,23 +1225,13 @@ public class FinchiApplication {
                 sendJson(exchange, 400, "{\"ok\":false,\"message\":\"Tài khoản học sinh không hợp lệ hoặc không được hỗ trợ.\"}");
                 return;
             }
-            Properties account = loadAccount(username);
-            if (account.isEmpty()) {
-                sendJson(exchange, 404, "{\"ok\":false,\"message\":\"Không tìm thấy tài khoản học sinh.\"}");
+            Properties stateProps;
+            try {
+                stateProps = processStudentEvent(username, form);
+            } catch (IllegalStateException error) {
+                sendJson(exchange, 404, "{\"ok\":false,\"message\":\"" + jsonEscape(error.getMessage()) + "\"}");
                 return;
             }
-            Properties stateProps = loadProperties(studentStateFile(username));
-            updateAiState(stateProps, form);
-            saveProperties(studentStateFile(username), stateProps, "Finchi student learning state");
-            appendLog(
-                    studentEventFile(username),
-                    Instant.now() + "|event=" + form.getOrDefault("eventType", "")
-                            + "|lesson=" + form.getOrDefault("currentLesson", "")
-                            + "|mission=" + form.getOrDefault("currentMission", "")
-                            + "|skill=" + form.getOrDefault("skillTag", "")
-                            + "|correct=" + form.getOrDefault("isCorrect", "false")
-                            + "|attempt=" + form.getOrDefault("attemptCount", "0")
-            );
             sendJson(
                     exchange,
                     200,
@@ -1212,22 +1258,58 @@ public class FinchiApplication {
                 sendJson(exchange, 400, "{\"ok\":false,\"message\":\"Tài khoản học sinh không hợp lệ hoặc không được hỗ trợ.\"}");
                 return;
             }
-            Properties account = loadAccount(username);
-            if (account.isEmpty()) {
-                sendJson(exchange, 404, "{\"ok\":false,\"message\":\"Không tìm thấy tài khoản học sinh.\"}");
+            try {
+                processParentEvent(username, form);
+            } catch (IllegalStateException error) {
+                sendJson(exchange, 404, "{\"ok\":false,\"message\":\"" + jsonEscape(error.getMessage()) + "\"}");
                 return;
             }
-            Properties stateProps = loadProperties(studentStateFile(username));
-            updateAiState(stateProps, form);
-            saveProperties(studentStateFile(username), stateProps, "Finchi student learning state");
-            appendLog(
-                    parentEventFile(username),
-                    Instant.now() + "|event=" + form.getOrDefault("eventType", "")
-                            + "|page=" + form.getOrDefault("currentPage", "")
-                            + "|weakSkill=" + form.getOrDefault("weakSkill", "")
-                            + "|weakLevel=" + form.getOrDefault("weakLevel", "")
-            );
             sendJson(exchange, 200, "{\"ok\":true}");
+        }
+    }
+
+    private static final class EventBatchHandler implements HttpHandler {
+        @Override
+        public void handle(HttpExchange exchange) throws IOException {
+            if (!"POST".equalsIgnoreCase(exchange.getRequestMethod())) {
+                exchange.sendResponseHeaders(405, -1);
+                return;
+            }
+            Map<String, String> form = parseForm(exchange);
+            String eventsBody = form.getOrDefault("events", "");
+            int accepted = 0;
+            int skipped = 0;
+            for (String line : eventsBody.split("\\R")) {
+                if (line == null || line.isBlank()) {
+                    continue;
+                }
+                Map<String, String> event = parseFormBody(line);
+                String username = event.getOrDefault("username", "").trim();
+                if (!isSupportedUsername(username)) {
+                    skipped += 1;
+                    continue;
+                }
+                String role = event.getOrDefault("role", "student").trim();
+                try {
+                    if ("parent".equalsIgnoreCase(role)) {
+                        processParentEvent(username, event);
+                    } else {
+                        processStudentEvent(username, event);
+                    }
+                    accepted += 1;
+                } catch (IllegalStateException ignored) {
+                    skipped += 1;
+                }
+            }
+            sendJson(
+                    exchange,
+                    200,
+                    "{"
+                            + "\"ok\":true,"
+                            + "\"accepted\":" + accepted + ','
+                            + "\"skipped\":" + skipped
+                            + "}"
+            );
         }
     }
 
@@ -1691,6 +1773,7 @@ public class FinchiApplication {
                     StandardOpenOption.TRUNCATE_EXISTING,
                     StandardOpenOption.WRITE
             );
+            invalidateAccountSnapshotCache();
             sendJson(
                     exchange,
                     200,
@@ -1886,6 +1969,7 @@ public class FinchiApplication {
 
                 byte[] bytes = inputStream.readAllBytes();
                 exchange.getResponseHeaders().set("Content-Type", resolveContentType(path));
+                exchange.getResponseHeaders().set("Cache-Control", resolveCacheControl(path));
                 if (path.endsWith(".mp4") || path.endsWith(".mp3")) {
                     exchange.getResponseHeaders().set("Accept-Ranges", "bytes");
                 }
@@ -1902,6 +1986,24 @@ public class FinchiApplication {
                     .map(Map.Entry::getValue)
                     .findFirst()
                     .orElse("application/octet-stream");
+        }
+
+        private String resolveCacheControl(String path) {
+            if (path.endsWith(".html")) {
+                return "no-cache";
+            }
+            if (path.endsWith(".json")) {
+                return "public, max-age=600";
+            }
+            if (path.endsWith(".png") || path.endsWith(".jpg") || path.endsWith(".jpeg")
+                    || path.endsWith(".webp") || path.endsWith(".avif") || path.endsWith(".svg")
+                    || path.endsWith(".mp4") || path.endsWith(".mp3")) {
+                return "public, max-age=604800, immutable";
+            }
+            if (path.endsWith(".css") || path.endsWith(".js")) {
+                return "public, max-age=3600, must-revalidate";
+            }
+            return "public, max-age=300";
         }
     }
 }

@@ -43,6 +43,17 @@ button:disabled { cursor: not-allowed; opacity: 0.6; transform: none; }
 .screen { max-width: 1200px; margin: 0 auto; animation: fadeUp 0.45s ease; }
 @keyframes fadeUp { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
 
+.main-panel,
+.sidebar,
+.social-panel,
+.quiz-panel,
+.result-panel,
+.shop-panel,
+.monthly-panel {
+  content-visibility: auto;
+  contain-intrinsic-size: 1px 920px;
+}
+
 .card {
   background: var(--panel);
   border: 1px solid rgba(221, 231, 224, 0.9);
@@ -194,6 +205,20 @@ button:disabled { cursor: not-allowed; opacity: 0.6; transform: none; }
   height: 132px;
   object-fit: contain;
   border-radius: 20px;
+}
+
+img {
+  max-width: 100%;
+  height: auto;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  * {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
 }
 .quiz-art-card span {
   position: absolute;

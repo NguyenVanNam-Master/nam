@@ -5,7 +5,7 @@ param(
     [Parameter(Mandatory = $true)]
     [string]$Token,
 
-    [string]$AccountsDir = "$PSScriptRoot\server-data\accounts",
+    [string]$AccountsDir = '',
 
     [switch]$Overwrite
 )
@@ -13,6 +13,17 @@ param(
 $ErrorActionPreference = 'Stop'
 
 $base = $BaseUrl.TrimEnd('/')
+
+$scriptDir = $PSScriptRoot
+if ([string]::IsNullOrWhiteSpace($scriptDir)) {
+    $scriptDir = Split-Path -Parent $MyInvocation.MyCommand.Path
+}
+if ([string]::IsNullOrWhiteSpace($scriptDir)) {
+    $scriptDir = (Get-Location).Path
+}
+if ([string]::IsNullOrWhiteSpace($AccountsDir)) {
+    $AccountsDir = Join-Path $scriptDir 'server-data\accounts'
+}
 
 if (-not (Test-Path -LiteralPath $AccountsDir)) {
     throw "Không tìm thấy thư mục account: $AccountsDir"

@@ -24,6 +24,11 @@
     /đầu tư ngoài đời/gi,
     /thu thập dữ liệu nhạy cảm/gi
   ];
+  const SPEECH_CACHE_TTL_MS = 15000;
+  let lastSpokenMessage = {
+    text: '',
+    at: 0
+  };
 
   function clamp(value, min, max) {
     return Math.max(min, Math.min(max, Number(value || 0)));
@@ -432,11 +437,18 @@
     if (!global.speechSynthesis || !global.SpeechSynthesisUtterance) return false;
     const safeText = stripSpeechText(response?.message);
     if (!safeText) return false;
+    if (lastSpokenMessage.text === safeText && Date.now() - lastSpokenMessage.at < SPEECH_CACHE_TTL_MS) {
+      return false;
+    }
     stopSpeaking();
     const utterance = new global.SpeechSynthesisUtterance(safeText);
     utterance.lang = 'vi-VN';
     utterance.rate = clamp(settings?.voiceRate || 1, 0.85, 1.15);
     global.speechSynthesis.speak(utterance);
+    lastSpokenMessage = {
+      text: safeText,
+      at: Date.now()
+    };
     return true;
   }
 

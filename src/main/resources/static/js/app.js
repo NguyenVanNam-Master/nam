@@ -1,11 +1,17 @@
 const STORAGE_KEY = 'finchi-player-v2';
 const SESSION_KEY = 'finchi-session-v1';
-const SPLASH_MIN_DURATION = 6800;
+const SPLASH_MIN_DURATION = 1800;
 const APP_NAME = 'FINCHI EDU';
 const APP_SUBTITLE = 'Nền tảng học tài chính cá nhân qua trò chơi dành cho học sinh tiểu học';
 const APP_TITLE = `${APP_NAME}: ${APP_SUBTITLE}`;
-const aiModule = window.FinchiAi;
+let aiModule = window.FinchiAi || null;
 const AI_IDLE_MS = 30000;
+const PERFORMANCE_WARN_MS = 1000;
+const STATIC_DATA_TTL_MS = 1000 * 60 * 60 * 12;
+const API_CACHE_TTL_MS = 15000;
+const AI_RESPONSE_CACHE_TTL_MS = 1000 * 60 * 2;
+const EVENT_BATCH_FLUSH_MS = 280;
+const FETCH_CACHE_NAMESPACE = 'finchi-fetch-cache-v3';
 
 const app = document.getElementById('app');
 const toast = document.getElementById('toast');
@@ -19,6 +25,19 @@ const splashState = {
   progress: 0,
   timer: null
 };
+
+const memoryCache = new Map();
+const aiResponseCache = new Map();
+const requestMetrics = {
+  history: [],
+  slow: []
+};
+const eventBatchState = {
+  items: [],
+  timer: null,
+  flushing: null
+};
+let aiModuleLoadingPromise = null;
 
 const LEVEL_SCENES = [
   { path: '/images/backgrounds/island-1.jpg', title: 'Đảo Vách Xanh', tone: 'tone-forest', icon: '🌄' },
@@ -73,6 +92,230 @@ const MYSTERY_BOX_REWARD_PATTERN = [
 ];
 
 const CERTIFICATE_ART_PLACEHOLDER = '/images/certificates/finchi-certificate-template.png';
+
+function scheduleBackgroundTask(task, timeout = 240) {
+  if (typeof window.requestIdleCallback === 'function') {
+    window.requestIdleCallback(() => task(), { timeout: 1200 });
+    return;
+  }
+  window.setTimeout(task, timeout);
+}
+
+function applyAiModule(nextModule) {
+  if (!nextModule) return;
+  aiModule = nextModule;
+  if (state.player?.aiAgent) {
+    ensureAiPlayerState();
+  }
+  if (state.aiRuntime) {
+    const nextRuntime = aiModule?.createRuntimeState ? aiModule.createRuntimeState() : {};
+    state.aiRuntime = { ...nextRuntime, ...state.aiRuntime };
+  }
+}
+
+function ensureAiModuleLoaded(priority = 'idle') {
+  if (aiModule) return Promise.resolve(aiModule);
+  if (aiModuleLoadingPromise) return aiModuleLoadingPromise;
+
+  const loadScript = () => new Promise((resolve, reject) => {
+    const existing = document.querySelector('script[data-finchi-ai-module="true"]');
+    if (existing) {
+      existing.addEventListener('load', () => {
+        applyAiModule(window.FinchiAi || null);
+        resolve(aiModule);
+      }, { once: true });
+      existing.addEventListener('error', reject, { once: true });
+      return;
+    }
+    const script = document.createElement('script');
+    script.src = '/js/ai-agent.js';
+    script.async = true;
+    script.dataset.finchiAiModule = 'true';
+    script.onload = () => {
+      applyAiModule(window.FinchiAi || null);
+      resolve(aiModule);
+    };
+    script.onerror = () => reject(new Error('Không tải được mô-đun AI.'));
+    document.body.appendChild(script);
+  });
+
+  aiModuleLoadingPromise = priority === 'high'
+    ? loadScript()
+    : new Promise((resolve, reject) => {
+      scheduleBackgroundTask(() => {
+        loadScript().then(resolve).catch(reject);
+      }, 80);
+    });
+
+  return aiModuleLoadingPromise.catch(error => {
+    aiModuleLoadingPromise = null;
+    throw error;
+  });
+}
+
+function warmAiFeatures(screen = state.screen) {
+  if (!['quiz', 'result', 'parent', 'profile', 'aiReview', 'map', 'lesson'].includes(screen)) return;
+  ensureAiModuleLoaded('idle').catch(() => {});
+}
+
+function buildCacheKey(scope, key) {
+  return `${FETCH_CACHE_NAMESPACE}:${scope}:${key}`;
+}
+
+function readCachedValue(scope, key, ttlMs, persistent = false) {
+  const cacheKey = buildCacheKey(scope, key);
+  const inMemory = memoryCache.get(cacheKey);
+  if (inMemory && Date.now() - inMemory.ts < ttlMs) {
+    return inMemory.value;
+  }
+  if (!persistent) return undefined;
+  try {
+    const raw = localStorage.getItem(cacheKey);
+    if (!raw) return undefined;
+    const parsed = JSON.parse(raw);
+    if (!parsed || Date.now() - Number(parsed.ts || 0) >= ttlMs) {
+      localStorage.removeItem(cacheKey);
+      return undefined;
+    }
+    memoryCache.set(cacheKey, parsed);
+    return parsed.value;
+  } catch {
+    return undefined;
+  }
+}
+
+function writeCachedValue(scope, key, value, persistent = false) {
+  const cacheKey = buildCacheKey(scope, key);
+  const payload = { ts: Date.now(), value };
+  memoryCache.set(cacheKey, payload);
+  if (!persistent) return;
+  try {
+    localStorage.setItem(cacheKey, JSON.stringify(payload));
+  } catch {
+    // ignore quota errors
+  }
+}
+
+function buildRequestLabel(url, options = {}, meta = {}) {
+  if (meta.label) return meta.label;
+  try {
+    const resolved = new URL(url, window.location.origin);
+    const method = String(options.method || 'GET').toUpperCase();
+    return `${method} ${resolved.pathname}`;
+  } catch {
+    return String(url);
+  }
+}
+
+function recordRequestMetric(label, durationMs, options = {}, status = 0) {
+  const entry = {
+    label,
+    method: String(options.method || 'GET').toUpperCase(),
+    status,
+    durationMs: Math.round(durationMs),
+    capturedAt: new Date().toISOString()
+  };
+  requestMetrics.history.push(entry);
+  if (requestMetrics.history.length > 120) requestMetrics.history.shift();
+  if (entry.durationMs >= PERFORMANCE_WARN_MS) {
+    requestMetrics.slow.push(entry);
+    if (requestMetrics.slow.length > 30) requestMetrics.slow.shift();
+    console.warn(`[FINCHI perf] slow request ${entry.durationMs}ms`, entry.label, entry.status || 'network-error');
+  }
+}
+
+async function timedFetch(url, options = {}, meta = {}) {
+  const startedAt = performance.now();
+  const label = buildRequestLabel(url, options, meta);
+  try {
+    const response = await fetch(url, options);
+    recordRequestMetric(label, performance.now() - startedAt, options, response.status);
+    return response;
+  } catch (error) {
+    recordRequestMetric(label, performance.now() - startedAt, options, 0);
+    throw error;
+  }
+}
+
+function buildAiResponseCacheKey(role, triggerEvent, context = {}) {
+  return [
+    role,
+    triggerEvent,
+    context.currentLevelId || 0,
+    context.questionId || '',
+    context.skillTag || '',
+    context.weakSkill || '',
+    context.selectedAnswer || '',
+    context.isCorrect ? '1' : '0',
+    context.attemptCount || 0,
+    context.hintUsed || 0
+  ].join('|');
+}
+
+function readCachedAiResponse(cacheKey) {
+  const item = aiResponseCache.get(cacheKey);
+  if (!item) return null;
+  if (Date.now() - item.ts >= AI_RESPONSE_CACHE_TTL_MS) {
+    aiResponseCache.delete(cacheKey);
+    return null;
+  }
+  return item.value;
+}
+
+function writeCachedAiResponse(cacheKey, value) {
+  aiResponseCache.set(cacheKey, { ts: Date.now(), value });
+}
+
+function encodeBatchEvent(payload) {
+  return new URLSearchParams(payload).toString();
+}
+
+function scheduleAiEventFlush(immediate = false) {
+  clearTimeout(eventBatchState.timer);
+  if (immediate) {
+    flushAiEventBatch().catch(() => {});
+    return;
+  }
+  eventBatchState.timer = setTimeout(() => {
+    flushAiEventBatch().catch(() => {});
+  }, EVENT_BATCH_FLUSH_MS);
+}
+
+async function flushAiEventBatch() {
+  if (eventBatchState.flushing) return eventBatchState.flushing;
+  if (!eventBatchState.items.length) return null;
+  const lines = eventBatchState.items.splice(0, eventBatchState.items.length);
+  eventBatchState.flushing = postForm('/api/events/batch', {
+    events: lines.map(encodeBatchEvent).join('\n')
+  }).catch(() => {
+    eventBatchState.items = [...lines, ...eventBatchState.items].slice(-80);
+    return null;
+  }).finally(() => {
+    eventBatchState.flushing = null;
+  });
+  return eventBatchState.flushing;
+}
+
+function flushAiEventBatchSync() {
+  if (!eventBatchState.items.length || typeof navigator.sendBeacon !== 'function') return;
+  const body = new URLSearchParams({
+    events: eventBatchState.items.map(encodeBatchEvent).join('\n')
+  }).toString();
+  const blob = new Blob([body], { type: 'application/x-www-form-urlencoded;charset=UTF-8' });
+  navigator.sendBeacon('/api/events/batch', blob);
+  eventBatchState.items = [];
+}
+
+function applyMediaPerformanceHints(root = document) {
+  root.querySelectorAll('img').forEach(img => {
+    if (!img.getAttribute('loading')) img.setAttribute('loading', 'lazy');
+    if (!img.getAttribute('decoding')) img.setAttribute('decoding', 'async');
+  });
+  root.querySelectorAll('video').forEach(video => {
+    if (!video.getAttribute('preload')) video.setAttribute('preload', 'metadata');
+    video.setAttribute('playsinline', '');
+  });
+}
 
 function setBootProgress(progress, label) {
   if (!bootSplash) return;
@@ -723,11 +966,10 @@ function serializeAiPayload(eventType, context) {
 
 async function postAiEvent(path, eventType, context) {
   if (!state.account?.username) return null;
-  try {
-    return await postForm(path, serializeAiPayload(eventType, context));
-  } catch {
-    return null;
-  }
+  const payload = serializeAiPayload(eventType, context);
+  eventBatchState.items.push(payload);
+  scheduleAiEventFlush(eventBatchState.items.length >= 6);
+  return { ok: true, queued: true };
 }
 
 function storeAiResponse(role, response, options = {}) {
@@ -754,7 +996,8 @@ function storeAiResponse(role, response, options = {}) {
   }
   const aiState = ensureAiPlayerState();
   aiModule?.appendIntervention?.(aiState, normalized);
-  if (options.shouldPersist !== false) savePlayer();
+  if (options.shouldPersist === true) savePlayer();
+  else savePlayerLocal();
   if (options.shouldSpeak !== false) maybeSpeakAiResponse(role, normalized);
   return normalized;
 }
@@ -766,20 +1009,27 @@ function maybeSpeakAiResponse(role, response) {
 }
 
 async function fetchAiIntervention(role, triggerEvent, context) {
+  ensureAiModuleLoaded('idle').catch(() => {});
   const fallback = aiModule?.buildFallbackIntervention
     ? aiModule.buildFallbackIntervention(role, triggerEvent, context)
     : { title: 'AI FINCHI', message: 'FINCHI đang đồng hành cùng con.', characterState: 'idle', shouldSpeak: false };
+  const cacheKey = buildAiResponseCacheKey(role, triggerEvent, context);
+  const cachedResponse = readCachedAiResponse(cacheKey);
   if (!state.account?.username) {
-    return storeAiResponse(role, fallback, { shouldPersist: true });
+    return storeAiResponse(role, cachedResponse || fallback, { shouldPersist: false });
+  }
+  if (cachedResponse) {
+    storeAiResponse(role, cachedResponse, { shouldPersist: false });
   }
   try {
     const response = await postForm('/api/ai/intervention', {
       ...serializeAiPayload(triggerEvent, context),
       triggerEvent
     });
-    return storeAiResponse(role, response, { shouldPersist: true });
+    writeCachedAiResponse(cacheKey, response);
+    return storeAiResponse(role, response, { shouldPersist: false });
   } catch {
-    return storeAiResponse(role, fallback, { shouldPersist: true });
+    return storeAiResponse(role, cachedResponse || fallback, { shouldPersist: false });
   }
 }
 
@@ -826,6 +1076,7 @@ function syncAiQuestionWatch(level, question) {
 
 async function handleManualAiHint(level, question) {
   if (!level || !question) return;
+  ensureAiModuleLoaded('high').catch(() => {});
   const aiState = ensureAiPlayerState();
   const hintUsed = aiModule?.noteHintUsage ? aiModule.noteHintUsage(aiState, question.id) : (aiState.hintUsage[question.id] = Number(aiState.hintUsage[question.id] || 0) + 1);
   const context = aiModule?.recordPassiveEvent
@@ -834,26 +1085,42 @@ async function handleManualAiHint(level, question) {
       emotionSignal: 'thinking'
     }))
     : buildAiSupportContext(level, question, { hintUsed, emotionSignal: 'thinking' });
-  await postAiEvent('/api/events/student', 'student_requested_hint', context);
-  await fetchAiIntervention('student', 'student_requested_hint', context);
+  postAiEvent('/api/events/student', 'student_requested_hint', context);
+  storeAiResponse('student', readCachedAiResponse(buildAiResponseCacheKey('student', 'student_requested_hint', context))
+    || (aiModule?.buildFallbackIntervention ? aiModule.buildFallbackIntervention('student', 'student_requested_hint', context) : {
+      title: 'FINCHI gợi ý nhanh',
+      message: 'Con thử đọc lại tình huống và chọn món cần thiết trước nhé.',
+      characterState: 'hint',
+      shouldSpeak: false
+    }), { shouldPersist: false });
   if (state.screen === 'quiz') renderQuiz();
+  fetchAiIntervention('student', 'student_requested_hint', context).then(() => {
+    if (state.screen === 'quiz') renderQuiz();
+  }).catch(() => {});
 }
 
 async function handleStudentAnswerAi(level, question, answerPayload) {
+  ensureAiModuleLoaded('high').catch(() => {});
   const aiState = ensureAiPlayerState();
   const eventType = answerPayload.isCorrect ? 'student_answer_correct' : 'student_answer_wrong';
   const learningState = aiModule?.recordStudentSubmission
     ? aiModule.recordStudentSubmission(aiState, state.aiRuntime, buildAiSupportContext(level, question, answerPayload))
     : buildAiSupportContext(level, question, answerPayload);
-  await postAiEvent('/api/events/student', 'student_answer_submitted', learningState);
-  await postAiEvent('/api/events/student', eventType, learningState);
+  postAiEvent('/api/events/student', 'student_answer_submitted', learningState);
+  postAiEvent('/api/events/student', eventType, learningState);
   const trigger = aiModule?.decideTrigger ? aiModule.decideTrigger(eventType, learningState) : eventType;
   if (trigger) {
-    await fetchAiIntervention('student', trigger, learningState);
+    const optimistic = readCachedAiResponse(buildAiResponseCacheKey('student', trigger, learningState))
+      || (aiModule?.buildFallbackIntervention ? aiModule.buildFallbackIntervention('student', trigger, learningState) : null);
+    if (optimistic) {
+      storeAiResponse('student', optimistic, { shouldPersist: false, shouldSpeak: false });
+    }
+    fetchAiIntervention('student', trigger, learningState).catch(() => {});
   }
 }
 
 async function handleLevelCompletionAi(level) {
+  ensureAiModuleLoaded('idle').catch(() => {});
   const question = level?.questions?.[Math.max(0, state.currentQuestionIndex - 1)] || null;
   const aiState = ensureAiPlayerState();
   const context = aiModule?.recordPassiveEvent
@@ -861,9 +1128,14 @@ async function handleLevelCompletionAi(level) {
       emotionSignal: state.levelPassed ? 'confident' : 'thinking'
     }))
     : buildAiSupportContext(level, question, { emotionSignal: state.levelPassed ? 'confident' : 'thinking' });
-  await postAiEvent('/api/events/student', 'student_completed_mission', context);
+  postAiEvent('/api/events/student', 'student_completed_mission', context);
   if (state.levelPassed) {
-    await fetchAiIntervention('student', 'student_completed_mission', context);
+    const optimistic = readCachedAiResponse(buildAiResponseCacheKey('student', 'student_completed_mission', context))
+      || (aiModule?.buildFallbackIntervention ? aiModule.buildFallbackIntervention('student', 'student_completed_mission', context) : null);
+    if (optimistic) {
+      storeAiResponse('student', optimistic, { shouldPersist: false, shouldSpeak: false });
+    }
+    fetchAiIntervention('student', 'student_completed_mission', context).catch(() => {});
   }
 }
 
@@ -879,14 +1151,16 @@ async function ensureParentAiSummary(force = false) {
   });
   if (force || Date.now() - Number(state.aiRuntime.lastParentOpenAt || 0) > 5000) {
     state.aiRuntime.lastParentOpenAt = Date.now();
-    await postAiEvent('/api/events/parent', 'parent_opened_report', context);
+    postAiEvent('/api/events/parent', 'parent_opened_report', context);
   }
 
   state.aiRuntime.parentSummaryLoading = true;
   try {
-    const response = await fetch(`/api/parent/${encodeURIComponent(state.account.username)}/context-summary`);
-    if (!response.ok) throw new Error('Không tải được tóm tắt AI cho phụ huynh.');
-    const payload = await response.json();
+    const payload = await fetchJson(`/api/parent/${encodeURIComponent(state.account.username)}/context-summary`, {
+      ttlMs: API_CACHE_TTL_MS,
+      cacheKey: `parent-summary:${state.account.username}`,
+      force
+    });
     const summary = payload.summary || aiModule?.buildParentSummary?.(context) || null;
     state.aiRuntime.parentSummary = summary;
     state.aiRuntime.lastParentFetchAt = Date.now();
@@ -902,7 +1176,7 @@ async function ensureParentAiSummary(force = false) {
         safetyStatus: 'safe',
         summary
       };
-      storeAiResponse('parent', summaryResponse, { shouldPersist: true, shouldSpeak: false });
+      storeAiResponse('parent', summaryResponse, { shouldPersist: false, shouldSpeak: false });
     }
     return summary;
   } catch {
@@ -920,7 +1194,12 @@ async function requestParentMistakeExplanation() {
   const context = buildAiSupportContext(null, null, {
     role: 'parent'
   });
-  await postAiEvent('/api/events/parent', 'parent_viewed_mistake_detail', context);
+  postAiEvent('/api/events/parent', 'parent_viewed_mistake_detail', context);
+  const optimistic = readCachedAiResponse(buildAiResponseCacheKey('parent', 'parent_viewed_mistake_detail', context))
+    || (aiModule?.buildFallbackIntervention ? aiModule.buildFallbackIntervention('parent', 'parent_viewed_mistake_detail', context) : null);
+  if (optimistic) {
+    storeAiResponse('parent', optimistic, { shouldPersist: false, shouldSpeak: false });
+  }
   await fetchAiIntervention('parent', 'parent_viewed_mistake_detail', context);
   if (state.screen === 'parent') renderParentDashboard();
 }
@@ -1348,7 +1627,7 @@ async function submitCorrectionFeedback({ feedbackType, explanation, level, ques
     nextAction: 'continue',
     safetyStatus: 'safe'
   };
-  storeAiResponse(source === 'parent' ? 'parent' : 'student', correctionResponse, { shouldPersist: true });
+  storeAiResponse(source === 'parent' ? 'parent' : 'student', correctionResponse, { shouldPersist: false });
 
   if (payload.verification?.shouldUpdateAttempt && level && question) {
     const rewardDelta = Number(payload.rewardDelta ?? state.lastMissionAttempt?.rewardIfCorrect ?? 0);
@@ -1378,9 +1657,11 @@ async function ensureLearningMemoryLoaded(force = false) {
   }
   state.learningMemory.loading = true;
   try {
-    const response = await fetch(`/api/student/${encodeURIComponent(state.account.username)}/learning-memory`);
-    if (!response.ok) throw new Error('Không tải được learning memory.');
-    const payload = await response.json();
+    const payload = await fetchJson(`/api/student/${encodeURIComponent(state.account.username)}/learning-memory`, {
+      ttlMs: API_CACHE_TTL_MS,
+      cacheKey: `learning-memory:${state.account.username}`,
+      force
+    });
     state.learningMemory.items = Array.isArray(payload.items) ? payload.items : [];
     state.learningMemory.lastLoadedAt = Date.now();
     state.player.aiCorrection.learningMemory = [...state.learningMemory.items];
@@ -1415,9 +1696,11 @@ async function ensureAdminCorrectionQueue(force = false) {
   }
   state.adminReview.loading = true;
   try {
-    const response = await fetch('/api/admin/correction-feedback');
-    if (!response.ok) throw new Error('Không tải được hàng chờ review AI.');
-    const payload = await response.json();
+    const payload = await fetchJson('/api/admin/correction-feedback', {
+      ttlMs: API_CACHE_TTL_MS,
+      cacheKey: 'admin-correction-queue',
+      force
+    });
     state.adminReview.items = Array.isArray(payload.items) ? payload.items : [];
     state.adminReview.lastLoadedAt = Date.now();
     if (!state.adminReview.selectedId && state.adminReview.items[0]?.id) {
@@ -1436,9 +1719,11 @@ async function ensureAdminCorrectionDetail(id, force = false) {
   if (!id) return null;
   if (!force && state.adminReview.detail?.id === id) return state.adminReview.detail;
   try {
-    const response = await fetch(`/api/admin/correction-feedback/${encodeURIComponent(id)}`);
-    if (!response.ok) throw new Error('Không tải được chi tiết phản hồi.');
-    const payload = await response.json();
+    const payload = await fetchJson(`/api/admin/correction-feedback/${encodeURIComponent(id)}`, {
+      ttlMs: API_CACHE_TTL_MS,
+      cacheKey: `admin-correction-detail:${id}`,
+      force
+    });
     state.adminReview.detail = payload.item || null;
     state.adminReview.selectedId = id;
   } catch {
@@ -1765,11 +2050,11 @@ function saveSession() {
 
 async function postForm(url, data) {
   const body = new URLSearchParams(data).toString();
-  const response = await fetch(url, {
+  const response = await timedFetch(url, {
     method: 'POST',
     headers: { 'Content-Type': 'application/x-www-form-urlencoded;charset=UTF-8' },
     body
-  });
+  }, { label: `POST ${url}` });
   const payload = await response.json().catch(() => ({ ok: false, message: 'Máy chủ trả về dữ liệu không hợp lệ.' }));
   if (!response.ok || payload.ok === false) {
     throw new Error(payload.message || 'Yêu cầu chưa thành công.');
@@ -1778,9 +2063,11 @@ async function postForm(url, data) {
 }
 
 async function loadRemotePlayer(username) {
-  const response = await fetch(`/api/player/load?username=${encodeURIComponent(username)}`);
-  if (!response.ok) throw new Error('Không tải được tiến độ từ máy chủ.');
-  const payload = await response.json();
+  const payload = await fetchJson(`/api/player/load?username=${encodeURIComponent(username)}`, {
+    ttlMs: API_CACHE_TTL_MS,
+    cacheKey: `player-load:${username}`,
+    force: true
+  });
   state.account = { ...(state.account || {}), username: payload.username };
   saveSession();
   state.player = payload.player || null;
@@ -1839,12 +2126,14 @@ async function savePlayerNow() {
     aiInterventionCount: String(aiState.interventionHistory?.length || 0)
   };
   await postForm('/api/player/save', payload);
-  await refreshRankings();
+  refreshRankings(true).then(() => {
+    if (state.screen === 'leaderboard') renderLeaderboard();
+    if (state.screen === 'tournament') renderTournament();
+  }).catch(() => {});
   if (state.screen === 'leaderboard') renderLeaderboard();
   if (state.screen === 'tournament') renderTournament();
   if (state.screen === 'clans') {
-    await refreshClans().catch(() => {});
-    renderClans();
+    refreshClans(true).then(() => renderClans()).catch(() => {});
   }
   startStudySession();
 }
@@ -1857,13 +2146,15 @@ function scheduleRemoteSave() {
   }, 350);
 }
 
-async function refreshRankings() {
+async function refreshRankings(force = false) {
   const modes = ['daily', 'weekly', 'monthly', 'tournament'];
   const results = await Promise.all(modes.map(async mode => {
     try {
-      const response = await fetch(`/api/leaderboard?mode=${mode}`);
-      if (!response.ok) return [mode, []];
-      const payload = await response.json();
+      const payload = await fetchJson(`/api/leaderboard?mode=${mode}`, {
+        ttlMs: API_CACHE_TTL_MS,
+        cacheKey: `leaderboard:${mode}`,
+        force
+      });
       return [mode, payload.entries || []];
     } catch {
       return [mode, []];
@@ -1888,20 +2179,31 @@ function logoutAccount() {
   render();
   showToast('Đã đăng xuất khỏi tài khoản Finchi.');
 }
-async function fetchJson(path) {
-  const response = await fetch(path);
+async function fetchJson(path, options = {}) {
+  const ttlMs = Number(options.ttlMs || 0);
+  const persistent = Boolean(options.persistent);
+  const cacheKey = options.cacheKey || path;
+  if (!options.force && ttlMs > 0) {
+    const cached = readCachedValue(persistent ? 'json-persistent' : 'json-memory', cacheKey, ttlMs, persistent);
+    if (cached !== undefined) return cached;
+  }
+  const response = await timedFetch(path, {}, { label: `GET ${path}` });
   if (!response.ok) throw new Error(`Không tải được ${path}`);
-  return response.json();
+  const payload = await response.json();
+  if (ttlMs > 0) {
+    writeCachedValue(persistent ? 'json-persistent' : 'json-memory', cacheKey, payload, persistent);
+  }
+  return payload;
 }
 
 async function init() {
   runBootProgressSequence();
   try {
     [state.config, state.levels, state.shopItems, state.tournaments] = await Promise.all([
-      fetchJson('/data/game-config.json'),
-      fetchJson('/data/levels.json'),
-      fetchJson('/data/shop.json'),
-      fetchJson('/data/tournaments.json')
+      fetchJson('/data/game-config.json', { ttlMs: STATIC_DATA_TTL_MS, cacheKey: 'game-config', persistent: true }),
+      fetchJson('/data/levels.json', { ttlMs: STATIC_DATA_TTL_MS, cacheKey: 'levels', persistent: true }),
+      fetchJson('/data/shop.json', { ttlMs: STATIC_DATA_TTL_MS, cacheKey: 'shop', persistent: true }),
+      fetchJson('/data/tournaments.json', { ttlMs: STATIC_DATA_TTL_MS, cacheKey: 'tournaments', persistent: true })
     ]);
     setBootProgress(92, 'Đang hoàn thiện những chi tiết cuối cùng...');
     loadSession();
@@ -1914,7 +2216,6 @@ async function init() {
         saveSession();
       }
     }
-    await refreshRankings();
     assignLevelScenes();
     resetMoneyBoard();
     maybeClaimDailyMysteryBox();
@@ -1924,6 +2225,10 @@ async function init() {
         : (state.player.name ? (state.player.watchedIntro ? 'map' : 'intro') : 'character'))
       : 'welcome';
     render();
+    refreshRankings(true).then(() => {
+      if (['leaderboard', 'tournament', 'profile', 'map', 'parent'].includes(state.screen)) render();
+    }).catch(() => {});
+    scheduleBackgroundTask(() => ensureAiModuleLoaded('idle').catch(() => {}), 50);
     startStudySession();
     showPendingMysteryBoxIfNeeded();
     await finishBootSplash();
@@ -2303,6 +2608,8 @@ function render() {
     default:
       renderWelcome();
   }
+  applyMediaPerformanceHints(app);
+  warmAiFeatures(state.screen);
   syncLiveRefreshForScreen();
 }
 
@@ -2421,6 +2728,7 @@ function shell(content) {
 
   attachCommonActions();
   attachAiSidebarControls();
+  applyMediaPerformanceHints(app);
 }
 
 function renderWelcome() {
@@ -3130,12 +3438,12 @@ async function submitAnswer(question, level) {
     awardScore(15, `Trả lời đúng ${question.id}`);
   }
   recordQuestionAnalytics(question, level, isCorrect);
-  await handleStudentAnswerAi(level, question, {
+  handleStudentAnswerAi(level, question, {
     isCorrect,
     selectedAnswer: getSelectedAnswerLabel(question),
     timeOnQuestion,
     emotionSignal: isCorrect ? 'confident' : (timeOnQuestion > 30 ? 'struggling' : 'thinking')
-  });
+  }).catch(() => {});
   state.lastMissionAttempt = {
     levelId: level.id,
     levelTitle: level.title,
@@ -3242,7 +3550,7 @@ async function completeLevel(level) {
   }
 
   recordLevelCompletionAnalytics(level.id, passedLevel);
-  await handleLevelCompletionAi(level);
+  handleLevelCompletionAi(level).catch(() => {});
   savePlayer();
   resetMoneyBoard();
   goTo('result');
@@ -4162,12 +4470,14 @@ function renderTournament() {
   `);
 }
 
-async function refreshClans() {
+async function refreshClans(force = false) {
   state.clansLoading = true;
   try {
-    const response = await fetch('/api/clans');
-    if (!response.ok) throw new Error('Không tải được danh sách clan.');
-    const payload = await response.json();
+    const payload = await fetchJson('/api/clans', {
+      ttlMs: API_CACHE_TTL_MS,
+      cacheKey: 'clans',
+      force
+    });
     state.clans = Array.isArray(payload.clans) ? payload.clans : [];
     state.clansLoaded = true;
   } catch (error) {
@@ -4301,29 +4611,17 @@ function renderClans() {
       description,
       joinedAt: new Date().toISOString()
     };
-    savePlayerLocal();
-    try {
-      await savePlayerNow();
-    } catch (error) {
-      showToast(error.message);
-      return;
-    }
-    await refreshClans().catch(() => {});
     renderClans();
+    savePlayer();
+    refreshClans(true).then(() => renderClans()).catch(() => {});
     showToast(`Đã tạo clan ${name}.`);
   });
 
   document.getElementById('leave-clan')?.addEventListener('click', async () => {
     state.player.clan = null;
-    savePlayerLocal();
-    try {
-      await savePlayerNow();
-    } catch (error) {
-      showToast(error.message);
-      return;
-    }
-    await refreshClans().catch(() => {});
     renderClans();
+    savePlayer();
+    refreshClans(true).then(() => renderClans()).catch(() => {});
     showToast('Đã rời clan hiện tại.');
   });
 
@@ -4338,15 +4636,9 @@ function renderClans() {
         description: clan.description || '',
         joinedAt: new Date().toISOString()
       };
-      savePlayerLocal();
-      try {
-        await savePlayerNow();
-      } catch (error) {
-        showToast(error.message);
-        return;
-      }
-      await refreshClans().catch(() => {});
       renderClans();
+      savePlayer();
+      refreshClans(true).then(() => renderClans()).catch(() => {});
       showToast(`Đã tham gia clan ${clan.name}.`);
     });
   });
@@ -4810,6 +5102,7 @@ function escapeHtml(value) {
 window.addEventListener('beforeunload', () => {
   flushStudySession();
   savePlayerLocal();
+  flushAiEventBatchSync();
 });
 
 init();
